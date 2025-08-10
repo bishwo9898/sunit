@@ -72,7 +72,7 @@ export default function HomePage() {
         <Services />
       </div>
       {/* Before/After retouch example */}
-      <section
+      {/* <section
         className="px-6 md:px-10 lg:px-16 py-12 md:py-20"
         data-aos="fade-up"
         data-aos-delay="150"
@@ -91,7 +91,7 @@ export default function HomePage() {
             alt="Retouch example"
           />
         </div>
-      </section>
+      </section> */}
 
       <div data-aos="fade-up" data-aos-delay="200">
         <Process />
