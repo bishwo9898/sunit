@@ -141,10 +141,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${bodyFont.variable} ${displayFont.variable}`}>
       <head>
-  {/* Explicit favicon + app icons pointing to unit.png */}
-  <link rel="icon" type="image/png" href="/unit.png" />
-  <link rel="shortcut icon" type="image/png" href="/unit.png" />
-  <link rel="apple-touch-icon" href="/unit.png" />
+        {/* Explicit favicon + app icons pointing to unit.png */}
+        <link rel="icon" type="image/png" href="/unit.png" />
+        <link rel="shortcut icon" type="image/png" href="/unit.png" />
+        <link rel="apple-touch-icon" href="/unit.png" />
         <link rel="canonical" href={baseUrl} />
         <meta name="theme-color" content="#ffffff" />
         <meta
