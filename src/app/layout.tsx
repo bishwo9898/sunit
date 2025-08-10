@@ -105,7 +105,7 @@ export default function RootLayout({
     name: siteName,
     image: `${baseUrl}/optimized/hero/hero1.jpg`,
     url: baseUrl,
-  logo: `${baseUrl}/unit.png`,
+    logo: `${baseUrl}/unit.png`,
     description: defaultDesc,
     address: {
       "@type": "PostalAddress",
