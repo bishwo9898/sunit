@@ -99,7 +99,7 @@ export default function HomePage() {
       <div data-aos="fade-up" data-aos-delay="250">
         <Testimonials />
       </div>
-      <div data-aos="fade-up" data-aos-delay="300">
+      <div id="book" data-aos="fade-up" data-aos-delay="300">
         <CTABlock />
       </div>
       <StickyBook />
