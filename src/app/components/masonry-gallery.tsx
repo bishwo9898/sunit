@@ -106,16 +106,19 @@ export default function MasonryGallery({
   }, []);
 
   const columnized = useMemo(() => {
-    const columns: MasonryImage[][] = Array.from({ length: cols }, () => []);
+    // Each column holds objects with original index so lightbox maps correctly
+    const columns: { img: MasonryImage; index: number }[][] = Array.from(
+      { length: cols },
+      () => []
+    );
     const heights = new Array(cols).fill(0);
-    items.forEach((img) => {
+    items.forEach((img, originalIndex) => {
       const w = img.width || 1600;
       const h = img.height || 1200;
       const ratio = h / w;
       let target = 0;
-      for (let i = 1; i < cols; i++)
-        if (heights[i] < heights[target]) target = i;
-      columns[target].push(img);
+      for (let i = 1; i < cols; i++) if (heights[i] < heights[target]) target = i;
+      columns[target].push({ img, index: originalIndex });
       heights[target] += ratio;
     });
     return columns;
@@ -182,39 +185,33 @@ export default function MasonryGallery({
         <div ref={containerRef} className="flex gap-1 sm:gap-2 items-start">
           {columnized.map((col, ci) => (
             <div key={ci} className="flex flex-col gap-1 sm:gap-2 w-full">
-              {col.map((img, index) => {
-                const globalIndex =
-                  columnized
-                    .slice(0, ci)
-                    .reduce((acc, c) => acc + c.length, 0) + index;
-                return (
-                  <button
-                    key={img.src + globalIndex}
-                    onClick={() => setOpen(globalIndex)}
-                    className="relative overflow-hidden rounded-md focus:outline-none bg-neutral-50 shadow-sm cursor-zoom-in"
-                    aria-label={`Open image ${img.alt || "Gallery image"}`}
-                    data-aos="fade-up"
-                    data-aos-delay={Math.min(globalIndex * 30, 240)}
-                  >
-                    <Image
-                      src={img.src}
-                      alt={img.alt || "Gallery image"}
-                      width={(img.width || 1600) * 1.5} // increased resolution
-                      height={(img.height || 1200) * 1.5}
-                      sizes="100vw"
-                      placeholder={img.blurDataURL ? "blur" : "empty"}
-                      blurDataURL={img.blurDataURL}
-                      className="w-full h-auto object-contain" // ensure no cropping
-                      loading="lazy"
-                    />
-                    {img.alt && (
-                      <span className="pointer-events-none absolute left-3 bottom-3 text-[11px] tracking-wide uppercase font-medium text-white bg-black/40 px-2 py-1 rounded">
-                        {img.alt}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+              {col.map(({ img, index }) => (
+                <button
+                  key={img.src + index}
+                  onClick={() => setOpen(index)}
+                  className="relative overflow-hidden rounded-md focus:outline-none bg-neutral-50 shadow-sm cursor-zoom-in"
+                  aria-label={`Open image ${img.alt || "Gallery image"}`}
+                  data-aos="fade-up"
+                  data-aos-delay={Math.min(index * 30, 240)}
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt || "Gallery image"}
+                    width={(img.width || 1600) * 1.5} // increased resolution
+                    height={(img.height || 1200) * 1.5}
+                    sizes="100vw"
+                    placeholder={img.blurDataURL ? "blur" : "empty"}
+                    blurDataURL={img.blurDataURL}
+                    className="w-full h-auto object-contain" // ensure no cropping
+                    loading="lazy"
+                  />
+                  {img.alt && (
+                    <span className="pointer-events-none absolute left-3 bottom-3 text-[11px] tracking-wide uppercase font-medium text-white bg-black/40 px-2 py-1 rounded">
+                      {img.alt}
+                    </span>
+                  )}
+                </button>
+              ))}
             </div>
           ))}
           {!loaded && (
