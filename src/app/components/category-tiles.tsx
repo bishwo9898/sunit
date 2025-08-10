@@ -3,20 +3,22 @@ import Image from "next/image";
 
 // Elevated, minimal category showcase with refined overlays & micro-interactions
 export default function CategoryTiles() {
+  // NOTE: /public/hero folder does not exist in repo on Vercel; use existing optimized images instead.
+  // Choose strong representative landscape frames from each category.
   const tiles = [
     {
-      href: "optimized/weddings",
+      href: "/weddings", // navigate to page route
       title: "Weddings",
       subtitle: "Cinematic • candid • timeless",
-      src: "/hero/hero3.webp",
-      alt: "Wedding couple embracing under flowing veil",
+      src: "/optimized/weddings/eunice-100.jpg",
+      alt: "Bride and groom in luminous editorial wedding frame",
     },
     {
-      href: "optimized/portraits",
+      href: "/portraits",
       title: "Portraits",
       subtitle: "Editorial meets personal",
-      src: "/hero/hero2.webp",
-      alt: "Creative portrait with expressive gesture",
+      src: "/optimized/portraits/golden-1.jpg", // representative portrait image
+      alt: "Editorial portrait in warm golden light",
     },
   ];
 
