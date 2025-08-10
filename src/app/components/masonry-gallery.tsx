@@ -166,6 +166,21 @@ export default function MasonryGallery({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, showPrev, showNext, close]);
 
+  // Determine if this gallery is explicitly the weddings gallery (category prop present)
+  const isWeddingsGallery = useMemo(() => {
+    if (!category) return false;
+    const cats = Array.isArray(category) ? category : [category];
+    return cats.some((c) => c === "weddings" || c === "wedding");
+  }, [category]);
+
+  // Easter egg now targets a specific filename rather than an index (stable even if order changes)
+  const currentItem = open !== null ? items[open] : null;
+  const showEasterEgg =
+    isWeddingsGallery &&
+    !!currentItem &&
+    !!currentItem.src &&
+    currentItem.src.includes("eunice-299.jpg");
+
   return (
     <section className={`bg-white ${className}`}>
       <div className="w-full max-w-none mx-auto px-1 sm:px-2 md:px-4 lg:px-6 py-12 md:py-20">
@@ -251,17 +266,37 @@ export default function MasonryGallery({
             >
               {open + 1} / {items.length}
             </div>
-            <img
-              src={items[open].src}
-              alt={items[open].alt || "Gallery image"}
-              className={`max-h-[82vh] w-auto max-w-[92vw] object-contain transition duration-500 ease-out ${
-                lightboxVariant === "clean"
-                  ? "shadow-xl shadow-black/10 rounded-lg animate-[fadeScale_.6s_ease]"
-                  : "animate-[fadeIn_.5s_ease]"
-              }`}
-              draggable={false}
-              loading="eager"
-            />
+            <div className="flex flex-col md:flex-row items-center justify-center gap-12 w-full">
+              <div className="flex items-center justify-center">
+                <img
+                  src={items[open].src}
+                  alt={items[open].alt || "Gallery image"}
+                  className={`max-h-[82vh] w-auto max-w-[92vw] object-contain transition duration-500 ease-out ${
+                    lightboxVariant === "clean"
+                      ? "shadow-xl shadow-black/10 rounded-lg animate-[fadeScale_.6s_ease]"
+                      : "animate-[fadeIn_.5s_ease]"
+                  }`}
+                  draggable={false}
+                  loading="eager"
+                />
+                {/* Mobile Easter egg overlay (so it doesn't consume layout space) */}
+                {showEasterEgg && (
+                  <div className="md:hidden pointer-events-none absolute bottom-8 right-6 text-6xl font-black tracking-tight select-none text-fuchsia-400/80 drop-shadow-[0_0_10px_rgba(255,0,180,0.55)] animate-wiggle">
+                    DTTG
+                  </div>
+                )}
+              </div>
+              {showEasterEgg && (
+                <div className="hidden md:flex flex-col items-center justify-center max-w-xs text-center select-none">
+                  <div className="font-display text-fuchsia-500/90 text-7xl lg:text-8xl font-black tracking-tight leading-none animate-wiggle [text-shadow:0_4px_18px_rgba(255,0,180,0.45)]">
+                    DTTG
+                  </div>
+                  <div className="mt-4 text-[11px] tracking-[0.28em] uppercase text-neutral-400">
+                    Secret Code
+                  </div>
+                </div>
+              )}
+            </div>
             {items[open].alt && (
               <figcaption
                 className={`mt-5 text-xs md:text-sm tracking-wide max-w-2xl text-center ${
@@ -362,6 +397,24 @@ export default function MasonryGallery({
               100% {
                 opacity: 1;
               }
+            }
+            @keyframes wiggle {
+              0%,
+              100% {
+                transform: translate3d(0, 0, 0) rotate(-3deg) scale(1);
+              }
+              25% {
+                transform: translate3d(4px, -3px, 0) rotate(4deg) scale(1.05);
+              }
+              50% {
+                transform: translate3d(-3px, 2px, 0) rotate(-2deg) scale(1.04);
+              }
+              75% {
+                transform: translate3d(2px, -2px, 0) rotate(3deg) scale(1.06);
+              }
+            }
+            .animate-wiggle {
+              animation: wiggle 5.5s ease-in-out infinite;
             }
             .lightbox-open body,
             body.lightbox-open {
