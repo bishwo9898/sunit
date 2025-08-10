@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
+import Image from "next/image";
 
 const SERVICE_ID =
   process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_c00qc38";
@@ -88,9 +89,35 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Form + Sidebar */}
-      <section className="py-20 md:py-28">
-        <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-20 grid lg:grid-cols-12 gap-16">
+      {/* Feature Image + Enhanced Form */}
+      <section className="py-14 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 md:px-12 lg:px-20 grid lg:grid-cols-12 gap-14 md:gap-16">
+          {/* Feature Image / Inspiration */}
+          <div
+            className="relative lg:col-span-5 rounded-3xl overflow-hidden group order-last lg:order-first min-h-[360px] md:min-h-[420px]"
+            data-aos="fade-up"
+            data-aos-delay="80"
+          >
+            <Image
+              src="/optimized/hero/hero1.jpg"
+              alt="Featured work"
+              fill
+              priority
+              sizes="(max-width:1024px) 100vw, 40vw"
+              className="object-cover transition-transform duration-[6000ms] group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+            <div className="absolute bottom-0 p-7 flex flex-col gap-3">
+              <h3 className="text-white font-display text-2xl md:text-3xl font-semibold tracking-tight leading-tight">
+                Your story deserves intentional imagery.
+              </h3>
+              <p className="text-white/80 text-sm md:text-base max-w-md leading-relaxed">
+                I approach every commission with editorial restraint, empathy
+                and an eye for quiet transition moments.
+              </p>
+            </div>
+            <div className="pointer-events-none absolute inset-0 opacity-25 mix-blend-overlay bg-[radial-gradient(circle_at_30%_35%,white,transparent_65%)]" />
+          </div>
           {/* Form */}
           <div className="lg:col-span-7" data-aos="fade-up" data-aos-delay="50">
             <div className="mb-10">
@@ -135,6 +162,17 @@ export default function ContactPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-semibold tracking-wide uppercase text-neutral-500">
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    name="user_phone"
+                    placeholder="(555) 123‑4567"
+                    className="rounded-md bg-neutral-50 border border-neutral-200 focus:border-neutral-400 focus:ring-0 px-4 py-3 text-sm"
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold tracking-wide uppercase text-neutral-500">
                     Date (if set)
                   </label>
                   <input
@@ -144,6 +182,8 @@ export default function ContactPage() {
                     className="rounded-md bg-neutral-50 border border-neutral-200 focus:border-neutral-400 focus:ring-0 px-4 py-3 text-sm"
                   />
                 </div>
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-semibold tracking-wide uppercase text-neutral-500">
                     Location
@@ -155,22 +195,22 @@ export default function ContactPage() {
                     className="rounded-md bg-neutral-50 border border-neutral-200 focus:border-neutral-400 focus:ring-0 px-4 py-3 text-sm"
                   />
                 </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold tracking-wide uppercase text-neutral-500">
-                  Service Type
-                </label>
-                <select
-                  name="service_type"
-                  className="rounded-md bg-neutral-50 border border-neutral-200 focus:border-neutral-400 focus:ring-0 px-4 py-3 text-sm"
-                >
-                  <option value="Wedding">Wedding</option>
-                  <option value="Portraits">Portraits</option>
-                  <option value="Brand / Editorial">Brand / Editorial</option>
-                  <option value="Graduation">Graduation</option>
-                  <option value="Concert / Event">Concert / Event</option>
-                  <option value="Other">Other</option>
-                </select>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold tracking-wide uppercase text-neutral-500">
+                    Service Type
+                  </label>
+                  <select
+                    name="service_type"
+                    className="rounded-md bg-neutral-50 border border-neutral-200 focus:border-neutral-400 focus:ring-0 px-4 py-3 text-sm"
+                  >
+                    <option value="Wedding">Wedding</option>
+                    <option value="Portraits">Portraits</option>
+                    <option value="Brand / Editorial">Brand / Editorial</option>
+                    <option value="Graduation">Graduation</option>
+                    <option value="Concert / Event">Concert / Event</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold tracking-wide uppercase text-neutral-500">
@@ -211,80 +251,6 @@ export default function ContactPage() {
                 )}
               </div>
             </form>
-            <p className="mt-8 text-[11px] tracking-wide text-neutral-400 max-w-sm"></p>
-          </div>
-          {/* Sidebar / Details */}
-          <div
-            className="lg:col-span-5 flex flex-col gap-14"
-            data-aos="fade-up"
-            data-aos-delay="120"
-          >
-            <div className="relative p-8 rounded-3xl border border-neutral-200 bg-white shadow-sm">
-              <h3 className="text-lg font-semibold tracking-tight mb-4">
-                A Seamless Experience
-              </h3>
-              <ul className="space-y-4 text-sm text-neutral-600 leading-relaxed">
-                <li>
-                  <strong className="font-medium text-neutral-800">
-                    Timeline guidance:
-                  </strong>{" "}
-                  I’ll help structure coverage + light windows.
-                </li>
-                <li>
-                  <strong className="font-medium text-neutral-800">
-                    Hybrid capture:
-                  </strong>{" "}
-                  Digital & film available on request.
-                </li>
-                <li>
-                  <strong className="font-medium text-neutral-800">
-                    Secure delivery:
-                  </strong>{" "}
-                  Cloud gallery + archival recommendations.
-                </li>
-                <li>
-                  <strong className="font-medium text-neutral-800">
-                    Print options:
-                  </strong>{" "}
-                  Museum-grade albums & framed fine art.
-                </li>
-              </ul>
-              <div
-                className="absolute -inset-px rounded-3xl pointer-events-none [mask:linear-gradient(white,transparent)]"
-                style={{
-                  background:
-                    "radial-gradient(circle_at_20%_15%,rgba(0,0,0,0.06),transparent 60%)",
-                }}
-              />
-            </div>
-            <div className="relative p-8 rounded-3xl border border-neutral-200 bg-gradient-to-br from-neutral-50 to-white shadow-sm overflow-hidden">
-              <h3 className="text-lg font-semibold tracking-tight mb-4">
-                Direct Contact
-              </h3>
-              <div className="space-y-3 text-sm text-neutral-600">
-                <p>
-                  Email:{""}
-                  <a
-                    href="mailto:shutterunit@gmail.com"
-                    className="underline decoration-neutral-300 hover:decoration-neutral-800"
-                  >
-                    shutterunit@gmail.com
-                  </a>
-                </p>
-                <p>
-                  Instagram:{" "}
-                  <a
-                    href="https://instagram.com/shutterunit/"
-                    target="_blank"
-                    className="underline decoration-neutral-300 hover:decoration-neutral-800"
-                  >
-                    @shutterunit
-                  </a>
-                </p>
-                <p></p>
-              </div>
-              <div className="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-neutral-200/40 blur-3xl" />
-            </div>
           </div>
         </div>
       </section>

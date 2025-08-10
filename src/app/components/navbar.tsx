@@ -55,18 +55,19 @@ const Navbar = () => {
     <nav className="relative z-30 w-full px-4 sm:px-8 md:px-12 lg:px-24 py-6 md:py-8 bg-transparent shadow-sm flex items-center font-serif">
       {/* Logo */}
       <div
-        className="flex-shrink-0 flex items-center h-16"
+        className="flex-shrink-0 flex items-center h-14 sm:h-16"
         data-aos="fade-down"
         data-aos-delay="100"
       >
-        <Link href="/">
-          <div className="relative w-[320px] md:w-[520px] h-auto aspect-[3/1]">
+        <Link href="/" className="block relative">
+          <div className="relative w-[170px] sm:w-[240px] md:w-[360px] lg:w-[520px] h-auto aspect-[3/1] transition-all duration-300">
             <Image
               src="/unit.png"
-              alt="Logo"
+              alt="Shutter Unit logo"
               fill
-              className="object-contain"
+              className="object-contain drop-shadow-sm"
               priority
+              sizes="(max-width:640px) 170px, (max-width:768px) 240px, (max-width:1024px) 360px, 520px"
             />
           </div>
         </Link>

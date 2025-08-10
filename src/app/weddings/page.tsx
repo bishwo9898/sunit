@@ -3,6 +3,7 @@ import StickyBook from "../components/sticky-book";
 import MasonryGallery from "../components/masonry-gallery"; // already client component
 import { loadManifest } from "@/utils/manifest.server";
 import { selectHeroImages } from "@/utils/hero-selection";
+import CTABlock from "../components/cta-block"; // Assuming you have a CTA block component
 
 export default async function WeddingsPage() {
   // Load manifest server-side similar to home hero to select wedding hero images
@@ -21,7 +22,7 @@ export default async function WeddingsPage() {
   return (
     <>
       {/* HERO (Ken Burns style reused) */}
-      <section className="relative h-[78vh] md:h-[92vh] w-full overflow-hidden">
+      <section className="relative h-[82vh] sm:h-[86vh] md:h-[92vh] min-h-[480px] w-full overflow-hidden">
         {(slides.length ? slides : (fallbackSlides as any)).map(
           (s: any, i: number) => (
             <div
@@ -45,21 +46,21 @@ export default async function WeddingsPage() {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
         <div className="pointer-events-none absolute inset-0 grain" />
-        <div className="relative z-10 flex h-full items-end pb-16 md:pb-24">
-          <div className="px-6 md:px-12 lg:px-20 w-full">
-            <div className="max-w-4xl">
-              <p className="text-neutral-300 tracking-widest uppercase text-[11px] md:text-xs">
+        <div className="relative z-10 flex h-full items-end pb-12 sm:pb-14 md:pb-24">
+          <div className="px-4 sm:px-6 md:px-12 lg:px-20 w-full">
+            <div className="max-w-3xl sm:max-w-4xl">
+              <p className="text-neutral-300 tracking-[0.3em] uppercase text-[10px] sm:text-[11px] md:text-xs">
                 Wedding Collections
               </p>
-              <h1 className="mt-4 font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white">
+              <h1 className="mt-4 font-display text-[clamp(2.05rem,6.5vw,3.55rem)] md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.06]">
                 Intentional Storytelling for Modern Celebrations
               </h1>
-              <p className="mt-5 max-w-2xl text-neutral-300 text-sm md:text-lg leading-relaxed">
+              <p className="mt-3 md:mt-5 max-w-2xl text-neutral-300 text-[13px] sm:text-[15px] md:text-lg leading-relaxed">
                 Editorial finesse meets documentary honesty—quiet in-between
                 moments, architectural context, luminous skin tones, and
                 timeless color that ages with grace.
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4 md:gap-5">
+              <div className="mt-6 md:mt-8 flex flex-wrap items-center gap-3 md:gap-5">
                 <a
                   href="#wedding-gallery"
                   className="group relative inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-sm font-semibold text-neutral-900 shadow-sm shadow-black/10 ring-1 ring-black/5 transition hover:shadow-lg hover:shadow-black/20 focus:outline-none focus:ring-2 focus:ring-white/60"
@@ -80,7 +81,7 @@ export default async function WeddingsPage() {
                 </a>
                 <a
                   href="#book"
-                  className="group relative inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold text-white/90 ring-1 ring-white/30 hover:ring-white/50 backdrop-blur-md bg-white/10 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/60"
+                  className="group relative inline-flex items-center gap-2 rounded-full px-7 md:px-8 py-3 text-sm font-semibold text-white/90 ring-1 ring-white/30 hover:ring-white/50 backdrop-blur-md bg-white/10 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/60"
                 >
                   <span className="tracking-tight">Check Availability</span>
                   <svg
@@ -100,10 +101,10 @@ export default async function WeddingsPage() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/90 text-[11px] tracking-[0.28em]">
-          <div className="flex flex-col items-center gap-2">
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 text-white/90 text-[10px] sm:text-[11px] tracking-[0.25em] hidden sm:flex">
+          <div className="flex flex-col items-center gap-1 sm:gap-2">
             <span>SCROLL</span>
-            <span className="h-6 w-px bg-white/70 animate-pulse" />
+            <span className="h-5 sm:h-6 w-px bg-white/70 animate-pulse" />
           </div>
         </div>
       </section>
@@ -151,6 +152,10 @@ export default async function WeddingsPage() {
           className="border-t border-neutral-100"
           max={180}
         />
+      </div>
+
+      <div id="book" data-aos="fade-up" data-aos-delay="300">
+        <CTABlock />
       </div>
 
       {/* Sticky utility (client) */}
