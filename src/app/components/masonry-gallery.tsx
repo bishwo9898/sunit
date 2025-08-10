@@ -291,9 +291,7 @@ export default function MasonryGallery({
                   <div className="font-display text-fuchsia-500/90 text-7xl lg:text-8xl font-black tracking-tight leading-none animate-wiggle [text-shadow:0_4px_18px_rgba(255,0,180,0.45)]">
                     DTTG
                   </div>
-                  <div className="mt-4 text-[11px] tracking-[0.28em] uppercase text-neutral-400">
-                    Secret Code
-                  </div>
+                  <div className="mt-4 text-[11px] tracking-[0.28em] uppercase text-neutral-400"></div>
                 </div>
               )}
             </div>
