@@ -5,14 +5,14 @@ import Image from "next/image";
 export default function CategoryTiles() {
   const tiles = [
     {
-      href: "/weddings",
+      href: "optimized/weddings",
       title: "Weddings",
       subtitle: "Cinematic • candid • timeless",
       src: "/hero/hero3.webp",
       alt: "Wedding couple embracing under flowing veil",
     },
     {
-      href: "/portraits",
+      href: "optimized/portraits",
       title: "Portraits",
       subtitle: "Editorial meets personal",
       src: "/hero/hero2.webp",
