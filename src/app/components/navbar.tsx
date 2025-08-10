@@ -60,7 +60,7 @@ const Navbar = () => {
         data-aos-delay="100"
       >
         <Link href="/">
-          <div className="relative w-[180px] md:w-[350px] h-auto aspect-[3/1]">
+          <div className="relative w-[320px] md:w-[520px] h-auto aspect-[3/1]">
             <Image
               src="/unit.png"
               alt="Logo"

@@ -117,7 +117,8 @@ export default function MasonryGallery({
       const h = img.height || 1200;
       const ratio = h / w;
       let target = 0;
-      for (let i = 1; i < cols; i++) if (heights[i] < heights[target]) target = i;
+      for (let i = 1; i < cols; i++)
+        if (heights[i] < heights[target]) target = i;
       columns[target].push({ img, index: originalIndex });
       heights[target] += ratio;
     });

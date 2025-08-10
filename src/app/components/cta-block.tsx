@@ -30,7 +30,7 @@ export default function CTABlock() {
           <div className="mt-10">
             <iframe
               title="Book a session"
-              src="https://calendly.com/bishwo9898/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=0a0a0a&text_color=ffffff&primary_color=ffffff"
+              src="https://calendly.com/shutterunitofficial/30min?hide_event_type_details=1&hide_gdpr_banner=1&background_color=0a0a0a&text_color=ffffff&primary_color=ffffff"
               className="w-full h-[700px] rounded-2xl border border-white/10"
               loading="lazy"
             />
