@@ -1,17 +1,11 @@
 {
-  "buildCommand": "next build && echo 'Skipping ESLint checks'",
+  "buildCommand": "npm run build",
   "rewrites": [
     {
       "source": "/:path*",
       "destination": "/:path*"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
   "cleanUrls": true,
   "trailingSlash": false
-}    
+}
