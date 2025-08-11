@@ -166,7 +166,7 @@ export default function ContactPage() {
                   </label>
                   <input
                     type="tel"
-                    name="user_phone"
+                    name="phone"
                     placeholder="(555) 123‑4567"
                     className="rounded-md bg-neutral-50 border border-neutral-200 focus:border-neutral-400 focus:ring-0 px-4 py-3 text-sm"
                   />
