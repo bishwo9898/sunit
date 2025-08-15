@@ -34,3 +34,25 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Admin & Media Management
+
+- Admin is protected via middleware. Default credentials can be set with `ADMIN_USERNAME` and `ADMIN_PASSWORD`.
+- Upload supports drag/drop/paste. Duplicates are detected by normalized filename; pass `allowDuplicate=1` to override.
+- Reorder, delete (per section), and randomize operations persist to the image manifest.
+
+### Vercel Blob (production persistence)
+
+When deployed on Vercel, the filesystem is immutable. To enable uploads and manifest changes in production, configure Vercel Blob:
+
+- Install the Vercel Blob integration for the project.
+- Set these environment variables in Vercel:
+	- `BLOB_MANIFEST_KEY` e.g. `images.manifest.json` (stable key used to store the manifest)
+	- `BLOB_MANIFEST_URL` public URL to the manifest Blob (e.g. `https://<bucket>.public.blob.vercel-storage.com/images.manifest.json`)
+	- `BLOB_READ_WRITE_TOKEN` only needed for local development; in Vercel it is injected automatically by the integration
+
+With these configured, the app will:
+
+- Read and write the manifest to Blob.
+- Upload new image assets to Blob under `optimized/<section>/<id>.{webp,avif}`.
+- Continue to support local development by writing to `public/optimized/*`.

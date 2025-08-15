@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import fssync from 'node:fs';
 import path from 'node:path';
+import { put } from '@vercel/blob';
 
 export type ImgItem = {
   src: string;
@@ -14,8 +15,28 @@ export type ImgItem = {
   collections?: string[]; // e.g., ['home', 'portraits', 'weddings']
 };
 
+export function blobEnabled() {
+  return (
+    !!process.env.BLOB_MANIFEST_URL &&
+    !!process.env.BLOB_MANIFEST_KEY &&
+    // In Vercel, token can be provided via integration; locally require env
+    (process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL)
+  );
+}
+
 export async function loadManifest(): Promise<ImgItem[]> {
   try {
+    // Prefer Blob in production when configured
+    if (blobEnabled()) {
+      try {
+        const url = process.env.BLOB_MANIFEST_URL as string;
+        const res = await fetch(url, { cache: 'no-store' });
+        if (res.ok) {
+          const data = (await res.json()) as ImgItem[];
+          if (Array.isArray(data)) return data;
+        }
+      } catch {}
+    }
     const p = path.join(process.cwd(), 'public', 'images.manifest.json');
     let buf = await fs.readFile(p, 'utf8');
     let data: ImgItem[];
@@ -110,8 +131,19 @@ async function writeAtomic(jsonPath: string, content: string): Promise<void> {
 }
 
 export async function saveManifest(list: ImgItem[]): Promise<void> {
-  const jsonPath = path.join(process.cwd(), 'public', 'images.manifest.json');
   const payload = JSON.stringify(list, null, 2);
+  if (blobEnabled()) {
+    // Write to Vercel Blob; key must be stable and public
+    const key = process.env.BLOB_MANIFEST_KEY as string; // e.g., images.manifest.json
+    // @vercel/blob automatically reads token from env in Vercel; locally set BLOB_READ_WRITE_TOKEN
+    await put(key, payload, {
+      access: 'public',
+      contentType: 'application/json',
+      addRandomSuffix: false,
+    } as any);
+    return;
+  }
+  const jsonPath = path.join(process.cwd(), 'public', 'images.manifest.json');
   // serialize writes
   writeQueue = writeQueue.then(() => writeAtomic(jsonPath, payload)).catch(() => {});
   await writeQueue;

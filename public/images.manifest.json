@@ -1,17 +1,5 @@
 [
   {
-    "src": "/optimized/portraits/1755051061622-a-i-1.webp",
-    "width": 9504,
-    "height": 6336,
-    "blurDataURL": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAADQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JaACdMoR4GCnyDmE6vLzEVFSNxHtSgAD+tcf/KOQDXHf1ptZKvgq++0cv6sdqEsRF6qE5t6F4jq2lwYOTX9KMkioMQL6B6YW5Ws05F3temTi4/puRMGnRZw6sqWfhj4893XWAfXb2rpcJ5zxmUn0vLuFBIJdDZeR5FOLQIY2FoR4UzdpxNhTYF6N6h6tqOYcQAA==",
-    "alt": "a-i-1",
-    "tags": [],
-    "original": "/optimized/portraits/1755051061622-a-i-1.webp",
-    "collections": [
-      "home"
-    ]
-  },
-  {
     "src": "/optimized/portraits/cap-2.jpg",
     "width": 1714,
     "height": 2400,
@@ -20,6 +8,18 @@
     "tags": [],
     "category": "portraits",
     "original": "/portraits/cap 2.png",
+    "collections": [
+      "home"
+    ]
+  },
+  {
+    "src": "/optimized/portraits/1755051061622-a-i-1.webp",
+    "width": 9504,
+    "height": 6336,
+    "blurDataURL": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAADQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JaACdMoR4GCnyDmE6vLzEVFSNxHtSgAD+tcf/KOQDXHf1ptZKvgq++0cv6sdqEsRF6qE5t6F4jq2lwYOTX9KMkioMQL6B6YW5Ws05F3temTi4/puRMGnRZw6sqWfhj4893XWAfXb2rpcJ5zxmUn0vLuFBIJdDZeR5FOLQIY2FoR4UzdpxNhTYF6N6h6tqOYcQAA==",
+    "alt": "a-i-1",
+    "tags": [],
+    "original": "/optimized/portraits/1755051061622-a-i-1.webp",
     "collections": [
       "home"
     ]

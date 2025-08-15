@@ -3,7 +3,8 @@ import fs from 'node:fs/promises';
 import fssync from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
-import { loadManifest, saveManifest } from '@/utils/manifest.server';
+import { loadManifest, saveManifest, blobEnabled } from '@/utils/manifest.server';
+import { put } from '@vercel/blob';
 
 export const runtime = 'nodejs';
 
@@ -16,7 +17,7 @@ export async function POST(req: Request) {
 		const form = await req.formData();
 		const files = form.getAll('files').filter(f => f instanceof File) as File[];
 		if (!files.length) return NextResponse.json({ error: 'No files' }, { status: 400 });
-		const publicDir = path.join(process.cwd(), 'public');
+	const publicDir = path.join(process.cwd(), 'public');
 		// Decide target output folder based on admin context (portraits | weddings).
 		let target = String(form.get('target') || 'portraits');
 		if (target !== 'portraits' && target !== 'weddings' && target !== 'home') target = 'portraits';
@@ -34,10 +35,15 @@ export async function POST(req: Request) {
 			manifest
 				.map(m => m.original || m.src)
 		);
+		const normalizeBase = (p: string) => {
+			try {
+				const clean = p.split('?')[0];
+				const name = clean.split('/').pop() || clean;
+				return name.toLowerCase().replace(/\.(webp|avif|jpg|jpeg|png)$/i, '');
+			} catch { return p.toLowerCase(); }
+		};
 		const existingNameHashes = new Set(
-			manifest.map(m =>
-				(path.basename(m.src).toLowerCase().replace(/\.(webp|avif|jpg|jpeg|png)$/i, ''))
-			)
+			manifest.map(m => normalizeBase(String(m.src || '')))
 		);
 		let duplicateDetected = false;
 
@@ -64,15 +70,24 @@ export async function POST(req: Request) {
 			const folder = target === 'home' ? 'portraits' : target; // physical storage still in a category folder
 			const webpName = `/optimized/${folder}/${id}.webp`;
 			const avifName = `/optimized/${folder}/${id}.avif`;
-			await fs.writeFile(path.join(publicDir, webpName), webpBuf);
-			await fs.writeFile(path.join(publicDir, avifName), avifBuf);
+			let srcUrl = webpName;
+			if (blobEnabled()) {
+				const baseKey = `optimized/${folder}/${id}`; // without extension
+				// Upload to Blob with stable keys (no random suffix)
+				const webpBlob = await put(`${baseKey}.webp`, webpBuf, { access: 'public', addRandomSuffix: false, contentType: 'image/webp' } as any);
+				await put(`${baseKey}.avif`, avifBuf, { access: 'public', addRandomSuffix: false, contentType: 'image/avif' } as any);
+				srcUrl = webpBlob.url; // absolute URL
+			} else {
+				await fs.writeFile(path.join(publicDir, webpName), webpBuf);
+				await fs.writeFile(path.join(publicDir, avifName), avifBuf);
+			}
 			const item = {
-				src: webpName,
+				src: srcUrl,
 				width: meta.width || 0,
 				height: meta.height || 0,
 				blurDataURL: `data:image/webp;base64,${blurBuf.toString('base64')}`,
 				alt: '',
-				original: webpName,
+				original: srcUrl,
 				category: target === 'home' ? undefined : target,
 			collections: target === 'home' ? Array.from(new Set([...(initialCollections||[]), 'home'])) : (initialCollections.length ? initialCollections : undefined),
 			};
@@ -83,7 +98,8 @@ export async function POST(req: Request) {
 		}
 		await saveManifest(manifest);
 		return NextResponse.json({ ok: true, count: files.length });
-	} catch (e) {
-		return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+	} catch (e: any) {
+		const msg = (e && (e.message || e.toString())) || 'Upload failed';
+		return NextResponse.json({ error: msg }, { status: 500 });
 	}
 }
