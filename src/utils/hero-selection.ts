@@ -40,7 +40,10 @@ export type HeroSelectOptions = {
 
 export function selectHeroImages(manifest: ImgItem[], opts: HeroSelectOptions): ImgItem[] {
   const { categories, count } = opts;
-  const pool = manifest.filter(m => m.category && categories.includes(m.category));
+  // Prefer tag-based hero assignment if tags like `${category}-hero` exist
+  const heroTagPools = categories.flatMap(c => manifest.filter(m => (m.tags || []).includes(`${c}-hero`)));
+  const poolSource = heroTagPools.length ? heroTagPools : manifest.filter(m => m.category && categories.includes(m.category));
+  const pool = poolSource;
   if (!pool.length) return [];
 
   // Score images

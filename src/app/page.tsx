@@ -1,16 +1,59 @@
 import Hero from "@/app/components/hero";
 import CategoryTiles from "@/app/components/category-tiles";
 import Services from "@/app/components/services";
-import BeforeAfter from "@/app/components/before-after";
+//import BeforeAfter from "@/app/components/before-after";
 import Process from "@/app/components/process";
 import Testimonials from "@/app/components/testimonials";
 import CTABlock from "@/app/components/cta-block";
 import StickyBook from "@/app/components/sticky-book";
 import MasonryGallery from "@/app/components/masonry-gallery";
 
+export const metadata = {
+  title: "Midland Texas Wedding & Portrait Photographer | Shutter Unit",
+  description:
+    "Award-winning wedding & portrait photographer serving Midland, Odessa, West Texas & beyond. Editorial, cinematic, true-to-color imagery. Inquire today.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "Shutter Unit – Midland TX Photographer",
+    description:
+      "Wedding, portrait & editorial photography in Midland, Odessa & West Texas.",
+    url: "/",
+    type: "website",
+  },
+  keywords: [
+    "Midland Texas photographer",
+    "Texas wedding photographer",
+    "Midland portraits",
+    "Unit Photography",
+    "ShutterUnit Photography",
+    "West Texas photographer",
+    "Permian Basin photographer",
+    "Texas photgraphers",
+    "Texas middleland photopgrapher",
+  ],
+} as const;
+
 export default function HomePage() {
   return (
     <main className="min-h-screen w-full">
+      {/* Breadcrumb JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://www.shutterunit.com/",
+              },
+            ],
+          }),
+        }}
+      />
       <Hero />
       <div data-aos="fade-up" data-aos-delay="50">
         <CategoryTiles />
@@ -21,6 +64,7 @@ export default function HomePage() {
           heading="See my work"
           description="A living collage—weddings, portraits & recent commissions. Tap to enlarge."
           lightboxVariant="clean"
+          collection="home"
           max={140}
         />
       </div>

@@ -5,8 +5,7 @@ import sharp from 'sharp';
 
 // Configure input/output
 const INPUT_DIRS = [
-  'public/hero',
-  'public/recents',
+  // 'public/hero', // removed: no hero folder in repo; heroes are selected via tags
   'public/portraits',
   'public/weddings',
 ];

@@ -10,10 +10,12 @@ export type MasonryImage = {
   alt?: string;
   category?: string;
   featured?: boolean;
+  collections?: string[];
 };
 
 type MasonryGalleryProps = {
   category?: string | string[];
+  collection?: string | string[]; // e.g., 'home'
   max?: number;
   className?: string;
   images?: MasonryImage[];
@@ -21,67 +23,129 @@ type MasonryGalleryProps = {
   description?: string;
   // Lightbox visual style variant: default (dark) or clean (white)
   lightboxVariant?: "default" | "clean";
+  // If true, disables Next.js image optimization (use direct URLs). Useful for admin UIs.
+  unoptimized?: boolean;
+  // Enable/disable AOS animations; when disabled, avoid data-aos attributes so elements are visible.
+  animations?: boolean;
+  // Admin helpers: selection controls and parent notifications
+  selectable?: boolean;
+  selectedSrcs?: string[];
+  onToggleSelect?: (src: string, selected: boolean) => void;
+  onItemsRendered?: (srcs: string[]) => void;
+  // Force refetch/re-render of items when this value changes
+  refreshKey?: number;
+  // New: ordering (manifest/shuffle) and optional drag-and-drop sorting mode
+  orderStrategy?: "manifest" | "shuffle";
+  sortable?: boolean;
+  onReorder?: (orderedSrcs: string[]) => void;
+  // Show or hide small caption label (alt text) overlay
+  showCaptions?: boolean;
 };
 
 export default function MasonryGallery({
   category,
+  collection,
   max = 120,
   className = "",
   images,
   heading,
   description,
   lightboxVariant = "default",
+  unoptimized = false,
+  animations = true,
+  selectable = false,
+  selectedSrcs = [],
+  onToggleSelect,
+  onItemsRendered,
+  refreshKey,
+  // New: ordering & drag-and-drop support
+  orderStrategy = "manifest",
+  sortable = false,
+  onReorder,
+  showCaptions = true,
 }: MasonryGalleryProps) {
   const [items, setItems] = useState<MasonryImage[]>(images || []);
   const [open, setOpen] = useState<number | null>(null);
   const [cols, setCols] = useState(4);
   const [loaded, setLoaded] = useState(!!images);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const dragFromIndex = useRef<number | null>(null);
+  // Stabilize category/collection dependencies so array literals don't re-trigger fetches
+  const catKey = useMemo(() => {
+    if (!category) return "";
+    return Array.isArray(category) ? category.join("|") : String(category);
+  }, [Array.isArray(category) ? (category as string[]).join("|") : category]);
+  const colKey = useMemo(() => {
+    if (!collection) return "";
+    return Array.isArray(collection)
+      ? collection.join("|")
+      : String(collection);
+  }, [
+    Array.isArray(collection) ? (collection as string[]).join("|") : collection,
+  ]);
 
   useEffect(() => {
     if (images) return;
     let mounted = true;
     (async () => {
       try {
-        const res = await fetch("/images.manifest.json", { cache: "no-store" });
+        const res = await fetch("/api/images", { cache: "no-store" });
         if (res.ok) {
           const data: MasonryImage[] = await res.json();
-          let filtered = data.filter(
-            (d) => d.category && d.category !== "hero"
-          );
-          if (category) {
-            const cats = Array.isArray(category) ? category : [category];
+          // Base filter: keep valid src and exclude legacy hero entries.
+          // Do NOT require category globally; category may be cleared intentionally (e.g., admin removes from a category)
+          // and such items should still be eligible when filtering by collections like "home".
+          let filtered = data
+            .filter((d) => d.src && d.category !== "hero")
+            .filter((d) => !d.src.includes("/optimized/hero/"));
+          if (catKey) {
+            const cats = Array.isArray(category)
+              ? category
+              : [String(category)];
             filtered = filtered.filter(
               (d) => d.category && cats.includes(d.category)
             );
           }
-          // Deterministic shuffle that changes every 2 days.
-          // Keeps featured images at the front but randomizes order within groups.
-          const period = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 2)); // 2-day buckets
-          const seedBase = period + filtered.length;
-          function mulberry32(a: number) {
-            return function () {
-              let t = (a += 0x6d2b79f5);
-              t = Math.imul(t ^ (t >>> 15), t | 1);
-              t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-              return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-            };
+          if (colKey) {
+            const cols = Array.isArray(collection)
+              ? collection
+              : [String(collection)];
+            filtered = filtered.filter(
+              (d) =>
+                Array.isArray(d.collections) &&
+                d.collections.some((c) => cols.includes(c))
+            );
           }
-          function shuffle<T>(arr: T[], seed: number) {
-            const rand = mulberry32(seed);
-            for (let i = arr.length - 1; i > 0; i--) {
-              const j = Math.floor(rand() * (i + 1));
-              [arr[i], arr[j]] = [arr[j], arr[i]];
+          if (orderStrategy === "shuffle") {
+            // Deterministic shuffle that changes every 2 days.
+            // Keeps featured images at the front but randomizes order within groups.
+            const period = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 2)); // 2-day buckets
+            const seedBase = period + filtered.length;
+            function mulberry32(a: number) {
+              return function () {
+                let t = (a += 0x6d2b79f5);
+                t = Math.imul(t ^ (t >>> 15), t | 1);
+                t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+                return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+              };
             }
+            function shuffle<T>(arr: T[], seed: number) {
+              const rand = mulberry32(seed);
+              for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(rand() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+              }
+            }
+            const featuredGroup = filtered.filter((f) => f.featured);
+            const regularGroup = filtered.filter((f) => !f.featured);
+            shuffle(featuredGroup, seedBase + 17);
+            shuffle(regularGroup, seedBase + 53);
+            filtered = [...featuredGroup, ...regularGroup];
           }
-          const featuredGroup = filtered.filter((f) => f.featured);
-          const regularGroup = filtered.filter((f) => !f.featured);
-          shuffle(featuredGroup, seedBase + 17);
-          // slight different seed for regular group
-          shuffle(regularGroup, seedBase + 53);
-          filtered = [...featuredGroup, ...regularGroup];
           if (mounted) {
-            setItems(filtered.slice(0, max));
+            const final = filtered.slice(0, max);
+            setItems(final);
+            if (onItemsRendered) onItemsRendered(final.map((i) => i.src));
             setLoaded(true);
           }
           return;
@@ -92,12 +156,13 @@ export default function MasonryGallery({
     return () => {
       mounted = false;
     };
-  }, [category, max, images]);
+  }, [catKey, colKey, max, images, refreshKey]);
 
   useEffect(() => {
     const calc = () => {
       const w = window.innerWidth;
-      if (w < 1024) setCols(3);
+      if (w < 640) setCols(2);
+      else if (w < 1024) setCols(3);
       else setCols(4);
     };
     calc();
@@ -127,12 +192,13 @@ export default function MasonryGallery({
 
   // AOS handles fade-up animations; ensure refresh after images mount (optional)
   useEffect(() => {
+    if (!animations) return;
     // @ts-ignore
     if (typeof window !== "undefined" && window.AOS && window.AOS.refresh) {
       // @ts-ignore
       window.AOS.refresh();
     }
-  }, [columnized]);
+  }, [columnized, animations]);
 
   const showPrev = useCallback(
     () =>
@@ -166,20 +232,34 @@ export default function MasonryGallery({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, showPrev, showNext, close]);
 
-  // Determine if this gallery is explicitly the weddings gallery (category prop present)
-  const isWeddingsGallery = useMemo(() => {
-    if (!category) return false;
-    const cats = Array.isArray(category) ? category : [category];
-    return cats.some((c) => c === "weddings" || c === "wedding");
-  }, [category]);
-
-  // Easter egg now targets a specific filename rather than an index (stable even if order changes)
-  const currentItem = open !== null ? items[open] : null;
-  const showEasterEgg =
-    isWeddingsGallery &&
-    !!currentItem &&
-    !!currentItem.src &&
-    currentItem.src.includes("eunice-299.jpg");
+  // (Easter egg removed)
+  // Drag & drop handlers (only active when sortable)
+  const onDragStart = useCallback((index: number) => {
+    dragFromIndex.current = index;
+  }, []);
+  const onDragOver = useCallback(
+    (e: React.DragEvent) => {
+      if (!sortable) return;
+      e.preventDefault();
+    },
+    [sortable]
+  );
+  const onDrop = useCallback(
+    (toIndex: number) => {
+      if (!sortable) return;
+      const fromIndex = dragFromIndex.current;
+      dragFromIndex.current = null;
+      if (fromIndex === null || fromIndex === toIndex) return;
+      setItems((prev) => {
+        const next = prev.slice();
+        const [moved] = next.splice(fromIndex, 1);
+        next.splice(toIndex, 0, moved);
+        onReorder && onReorder(next.map((i) => i.src));
+        return next;
+      });
+    },
+    [sortable, onReorder]
+  );
 
   return (
     <section className={`bg-white ${className}`}>
@@ -198,36 +278,78 @@ export default function MasonryGallery({
             )}
           </header>
         )}
-        <div ref={containerRef} className="flex gap-1 sm:gap-2 items-start">
+        <div
+          ref={containerRef}
+          className="flex gap-1 sm:gap-2 items-start w-full"
+        >
           {columnized.map((col, ci) => (
-            <div key={ci} className="flex flex-col gap-1 sm:gap-2 w-full">
-              {col.map(({ img, index }) => (
-                <button
-                  key={img.src + index}
-                  onClick={() => setOpen(index)}
-                  className="relative overflow-hidden rounded-md focus:outline-none bg-neutral-50 shadow-sm cursor-zoom-in"
-                  aria-label={`Open image ${img.alt || "Gallery image"}`}
-                  data-aos="fade-up"
-                  data-aos-delay={Math.min(index * 30, 240)}
-                >
-                  <Image
-                    src={img.src}
-                    alt={img.alt || "Gallery image"}
-                    width={(img.width || 1600) * 1.5} // increased resolution
-                    height={(img.height || 1200) * 1.5}
-                    sizes="100vw"
-                    placeholder={img.blurDataURL ? "blur" : "empty"}
-                    blurDataURL={img.blurDataURL}
-                    className="w-full h-auto object-contain" // ensure no cropping
-                    loading="lazy"
-                  />
-                  {img.alt && (
-                    <span className="pointer-events-none absolute left-3 bottom-3 text-[11px] tracking-wide uppercase font-medium text-white bg-black/40 px-2 py-1 rounded">
-                      {img.alt}
-                    </span>
-                  )}
-                </button>
-              ))}
+            <div
+              key={ci}
+              className="flex flex-col gap-1 sm:gap-2 flex-1 min-w-0"
+            >
+              {col.map(({ img, index }) => {
+                const aosProps = animations
+                  ? {
+                      "data-aos": "fade-up",
+                      "data-aos-delay": Math.min(index * 30, 240),
+                    }
+                  : {};
+                const isSelected = selectable && selectedSrcs.includes(img.src);
+                return (
+                  <button
+                    key={img.src + index}
+                    onClick={() => !sortable && setOpen(index)}
+                    className="relative overflow-hidden rounded-md focus:outline-none bg-neutral-50 shadow-sm cursor-zoom-in"
+                    aria-label={`Open image ${img.alt || "Gallery image"}`}
+                    draggable={sortable}
+                    onDragStart={() => onDragStart(index)}
+                    onDragOver={onDragOver}
+                    onDrop={() => onDrop(index)}
+                    {...(aosProps as any)}
+                  >
+                    {selectable && (
+                      <label className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 text-[12px] text-neutral-100 bg-black/60 px-2 py-1 rounded shadow cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          className="accent-black w-4 h-4"
+                          checked={isSelected}
+                          onChange={(e) => {
+                            e.stopPropagation();
+                            onToggleSelect &&
+                              onToggleSelect(img.src, e.target.checked);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                        Select
+                      </label>
+                    )}
+                    {sortable && (
+                      <span className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 text-[11px] text-neutral-100 bg-black/40 px-2 py-1 rounded cursor-move">
+                        Drag
+                      </span>
+                    )}
+                    <Image
+                      src={img.src}
+                      alt={img.alt || "Gallery image"}
+                      width={img.width || 1600}
+                      height={img.height || 1200}
+                      sizes={`${Math.round(100 / cols)}vw`}
+                      placeholder={img.blurDataURL ? "blur" : "empty"}
+                      blurDataURL={img.blurDataURL}
+                      className={`block w-full h-auto object-contain ${
+                        sortable ? "cursor-move" : ""
+                      }`}
+                      loading="lazy"
+                      unoptimized={unoptimized}
+                    />
+                    {showCaptions && img.alt && (
+                      <span className="pointer-events-none absolute left-3 bottom-3 text-[11px] tracking-wide uppercase font-medium text-white bg-black/40 px-2 py-1 rounded">
+                        {img.alt}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           ))}
           {!loaded && (
@@ -279,21 +401,8 @@ export default function MasonryGallery({
                   draggable={false}
                   loading="eager"
                 />
-                {/* Mobile Easter egg overlay (so it doesn't consume layout space) */}
-                {showEasterEgg && (
-                  <div className="md:hidden pointer-events-none absolute bottom-8 right-6 text-6xl font-black tracking-tight select-none text-fuchsia-400/80 drop-shadow-[0_0_10px_rgba(255,0,180,0.55)] animate-wiggle">
-                    DTTG
-                  </div>
-                )}
               </div>
-              {showEasterEgg && (
-                <div className="hidden md:flex flex-col items-center justify-center max-w-xs text-center select-none">
-                  <div className="font-display text-fuchsia-500/90 text-7xl lg:text-8xl font-black tracking-tight leading-none animate-wiggle [text-shadow:0_4px_18px_rgba(255,0,180,0.45)]">
-                    DTTG
-                  </div>
-                  <div className="mt-4 text-[11px] tracking-[0.28em] uppercase text-neutral-400"></div>
-                </div>
-              )}
+              {/* Easter egg UI removed */}
             </div>
             {items[open].alt && (
               <figcaption
@@ -395,24 +504,6 @@ export default function MasonryGallery({
               100% {
                 opacity: 1;
               }
-            }
-            @keyframes wiggle {
-              0%,
-              100% {
-                transform: translate3d(0, 0, 0) rotate(-3deg) scale(1);
-              }
-              25% {
-                transform: translate3d(4px, -3px, 0) rotate(4deg) scale(1.05);
-              }
-              50% {
-                transform: translate3d(-3px, 2px, 0) rotate(-2deg) scale(1.04);
-              }
-              75% {
-                transform: translate3d(2px, -2px, 0) rotate(3deg) scale(1.06);
-              }
-            }
-            .animate-wiggle {
-              animation: wiggle 5.5s ease-in-out infinite;
             }
             .lightbox-open body,
             body.lightbox-open {

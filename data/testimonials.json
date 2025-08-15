@@ -1,0 +1,37 @@
+[
+  {
+    "id": "me7mgktm",
+    "quote": "Every photo feels like a story I want to relive again and again.",
+    "name": "— G",
+    "stars": 5,
+    "visible": true
+  },
+  {
+    "id": "me7mi3on",
+    "quote": "I’ve never felt so comfortable in front of a camera. The results are stunning.",
+    "name": "— Alex",
+    "stars": 5,
+    "visible": true
+  },
+  {
+    "id": "me7mijle",
+    "quote": "Somehow, they managed to capture both the big moments and the tiny, magical details.",
+    "name": "— Harry",
+    "stars": 5,
+    "visible": true
+  },
+  {
+    "id": "meac1n0b",
+    "quote": "This is just a test!",
+    "name": "— ShutterUnit",
+    "stars": 5,
+    "visible": true
+  },
+  {
+    "id": "meafngvw",
+    "quote": "Had an amazing photo ses",
+    "name": "— Jack",
+    "stars": 5,
+    "visible": false
+  }
+]

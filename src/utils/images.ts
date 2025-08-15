@@ -11,7 +11,7 @@ export type ImgItem = {
 
 export async function fetchManifest(): Promise<ImgItem[]> {
   try {
-    const res = await fetch('/images.manifest.json', { cache: 'no-store' });
+  const res = await fetch('/api/images', { cache: 'no-store' });
     if (!res.ok) return [];
     return (await res.json()) as ImgItem[];
   } catch {

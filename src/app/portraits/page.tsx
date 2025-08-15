@@ -1,111 +1,60 @@
-import Image from "next/image";
+import Hero from "@/app/components/hero";
 import MasonryGallery from "../components/masonry-gallery";
 import StickyBook from "../components/sticky-book";
-import { loadManifest } from "@/utils/manifest.server";
-import { selectHeroImages } from "@/utils/hero-selection";
 import CTABlock from "../components/cta-block";
 
-export default async function PortraitsPage() {
-  const manifest = await loadManifest();
-  const slides = selectHeroImages(manifest, {
-    categories: ["portraits"],
-    count: 6,
-  });
-  const fallbackSlides = [
-    { src: "/hero/hero2.webp", alt: "Editorial portrait" },
-    { src: "/hero/hero3.webp", alt: "Natural light profile" },
-    { src: "/hero/hero1.webp", alt: "Golden hour" },
-  ];
+export const metadata = {
+  title: "Midland Texas Portrait Photographer | Shutter Unit",
+  description:
+    "Editorial & natural-light portrait photography for individuals, creatives, families & grads in Midland, Odessa & West Texas.",
+  alternates: { canonical: "/portraits" },
+  openGraph: {
+    title: "Portrait Photographer in Midland TX – Shutter Unit",
+    description:
+      "Candid + guided portrait sessions with true-to-tone color and subtle retouching.",
+    url: "/portraits",
+    type: "article",
+  },
+  keywords: [
+    "Midland portrait photographer",
+    "Texas portrait photography",
+    "branding photographer Midland",
+    "family portraits Midland",
+    "graduation photos Midland",
+    "Unit Photography",
+    "ShutterUnit Photography",
+    "Texas photgraphers",
+  ],
+} as const;
 
+export default async function PortraitsPage() {
   return (
     <>
-      {/* HERO (Ken Burns) – tuned for better mobile height & readability */}
-      <section className="relative h-[82vh] sm:h-[86vh] md:h-[92vh] min-h-[480px] w-full overflow-hidden">
-        {(slides.length ? slides : (fallbackSlides as any)).map(
-          (s: any, i: number) => (
-            <div
-              key={s.src}
-              aria-hidden="true"
-              className="absolute inset-0 opacity-0 kb-slide"
-              style={{ animationDelay: `${i * 6}s` }}
-            >
-              <Image
-                src={s.src}
-                alt={s.alt || s.tags?.join(", ") || "Portrait hero"}
-                fill
-                priority={i === 0}
-                sizes="100vw"
-                className="object-cover"
-                placeholder={s.blurDataURL ? "blur" : "empty"}
-                blurDataURL={s.blurDataURL}
-              />
-            </div>
-          )
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 grain" />
-        <div className="relative z-10 flex h-full items-end pb-12 sm:pb-14 md:pb-24">
-          <div className="px-4 sm:px-6 md:px-12 lg:px-20 w-full">
-            <div className="max-w-3xl sm:max-w-4xl">
-              <p className="text-neutral-300 tracking-[0.3em] uppercase text-[10px] sm:text-[11px] md:text-xs">
-                Portrait Sessions
-              </p>
-              <h1 className="mt-4 font-display text-[clamp(2.05rem,6.8vw,3.4rem)] md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.06]">
-                Editorial & Honest Portraiture
-              </h1>
-              <p className="mt-3 md:mt-5 max-w-2xl text-neutral-300 text-[13px] sm:text-[15px] md:text-lg leading-relaxed">
-                Direction where it serves you—authentic in-between frames the
-                rest of the time. Natural color, luminous skin tones, and a
-                cinematic stillness.
-              </p>
-              <div className="mt-6 md:mt-8 flex flex-wrap items-center gap-3 md:gap-5">
-                <a
-                  href="#portrait-gallery"
-                  className="group relative inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-sm font-semibold text-neutral-900 shadow-sm shadow-black/10 ring-1 ring-black/5 transition hover:shadow-lg hover:shadow-black/20 focus:outline-none focus:ring-2 focus:ring-white/60"
-                >
-                  <span className="tracking-tight">View Gallery</span>
-                  <svg
-                    className="w-3.5 h-3.5 text-neutral-500 group-hover:translate-x-0.5 transition-transform"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3 11L11 3" />
-                    <path d="M5 3h6v6" />
-                  </svg>
-                </a>
-                <a
-                  href="#book"
-                  className="group relative inline-flex items-center gap-2 rounded-full px-7 md:px-8 py-3 text-sm font-semibold text-white/90 ring-1 ring-white/30 hover:ring-white/50 backdrop-blur-md bg-white/10 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/60"
-                >
-                  <span className="tracking-tight">Book a Session</span>
-                  <svg
-                    className="w-3.5 h-3.5 translate-x-0.5 opacity-70 group-hover:translate-x-1 group-hover:opacity-100 transition-all"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3 11L11 3" />
-                    <path d="M5 3h6v6" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 text-white/90 text-[10px] sm:text-[11px] tracking-[0.25em] hidden sm:flex">
-          <div className="flex flex-col items-center gap-1 sm:gap-2">
-            <span>SCROLL</span>
-            <span className="h-5 sm:h-6 w-px bg-white/70 animate-pulse" />
-          </div>
-        </div>
-      </section>
+      {/* Breadcrumb JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://www.shutterunit.com/",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Portraits",
+                item: "https://www.shutterunit.com/portraits",
+              },
+            ],
+          }),
+        }}
+      />
+      <Hero variant="portraits" />
 
       {/* Value Pillars */}
       <section className="py-24 md:py-32 bg-white">

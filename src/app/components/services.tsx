@@ -1,54 +1,85 @@
 import Image from "next/image";
 import { loadManifest } from "@/utils/manifest.server";
 import { FiHeart, FiUsers, FiMusic, FiAward, FiLayers } from "react-icons/fi";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 export default async function Services() {
   const manifest = await loadManifest();
-  const heroImgs = manifest.filter((m) => m.category === "hero");
   const portraits = manifest.filter((m) => m.category === "portraits");
   const weddings = manifest.filter((m) => m.category === "weddings");
-  const recents = manifest.filter((m) => m.category === "recents");
-
+  // Heroes are admin-managed via tags; don't pull from a 'hero' category
+  const heroImgs: any[] = manifest.filter((m) =>
+    (m.tags || []).includes("hero")
+  );
   const findHero6 = heroImgs.find((m) => /hero6\./.test(m.src));
 
-  const services = [
-    {
-      title: "Weddings",
-      desc: "Full-day coverage focused on authentic emotion, elegant composition, and quiet in-between moments.",
-      Icon: FiHeart,
-      img: weddings[0] || heroImgs[0] || recents[0],
-      duration: "8–12 hrs",
-      span: "lg:col-span-2",
-    },
-    {
-      title: "Portraits",
-      desc: "Editorial & honest sessions for individuals, couples, creatives, and families—film or digital.",
-      Icon: FiUsers,
-      img: portraits[0] || recents[1] || heroImgs[1],
-      duration: "1–2 hrs",
-    },
-    {
-      title: "Concerts",
-      desc: "Atmospheric live music coverage—energy, crowd, and intimate artist frames that feel immersive.",
-      Icon: FiMusic,
-      img: findHero6 || heroImgs[heroImgs.length - 1] || recents[2],
-      duration: "Set-based",
-    },
-    {
-      title: "Graduation",
-      desc: "Clean, celebratory portraits with cinematic light—individual or group packages available.",
-      Icon: FiAward,
-      img: portraits[3] || portraits[2] || recents[3],
-      duration: "1–3 hrs",
-    },
-    {
-      title: "Other",
-      desc: "Custom commissions—branding, editorial, travel, proposals. Tell me your vision and we’ll shape it.",
-      Icon: FiLayers,
-      img: recents[4] || portraits[5] || heroImgs[2],
-      duration: "Custom",
-    },
-  ];
+  // Load dynamic services if present, else fallback to static defaults
+  async function loadServices() {
+    try {
+      const p = path.join(process.cwd(), "data", "services.json");
+      const raw = await fs.readFile(p, "utf8");
+      const json = JSON.parse(raw);
+      if (Array.isArray(json) && json.length)
+        return json
+          .filter((s: any) => s.visible !== false)
+          .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+    } catch {}
+    return [
+      {
+        title: "Weddings",
+        desc: "Full-day coverage focused on authentic emotion, elegant composition, and quiet in-between moments.",
+        icon: "FiHeart",
+        duration: "8–12 hrs",
+      },
+      {
+        title: "Portraits",
+        desc: "Editorial & honest sessions for individuals, couples, creatives, and families—film or digital.",
+        icon: "FiUsers",
+        duration: "1–2 hrs",
+      },
+      {
+        title: "Concerts",
+        desc: "Atmospheric live music coverage—energy, crowd, and intimate artist frames that feel immersive.",
+        icon: "FiMusic",
+        duration: "Set-based",
+      },
+      {
+        title: "Graduation",
+        desc: "Clean, celebratory portraits with cinematic light—individual or group packages available.",
+        icon: "FiAward",
+        duration: "1–3 hrs",
+      },
+      {
+        title: "Other",
+        desc: "Custom commissions—branding, editorial, travel, proposals. Tell me your vision and we’ll shape it.",
+        icon: "FiLayers",
+        duration: "Custom",
+      },
+    ];
+  }
+  const svc = await loadServices();
+  const iconMap: Record<string, any> = {
+    FiHeart,
+    FiUsers,
+    FiMusic,
+    FiAward,
+    FiLayers,
+  };
+
+  const services = svc.map((s: any, i: number) => {
+    const Icon =
+      iconMap[s.icon] || [FiHeart, FiUsers, FiMusic, FiAward, FiLayers][i % 5];
+    const pools = [weddings, portraits, heroImgs].flat();
+    const img = pools[i] || pools[0] || heroImgs[0];
+    return {
+      title: s.title,
+      desc: s.desc,
+      Icon,
+      img,
+      duration: s.price || s.duration || "Custom",
+    };
+  });
 
   return (
     <section

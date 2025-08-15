@@ -39,6 +39,30 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-white text-neutral-900 flex flex-col">
+      {/* Breadcrumb JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://www.shutterunit.com/",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Contact",
+                item: "https://www.shutterunit.com/contact",
+              },
+            ],
+          }),
+        }}
+      />
       {/* Hero / Intro */}
       <section className="relative overflow-hidden">
         <div
@@ -99,7 +123,7 @@ export default function ContactPage() {
             data-aos-delay="80"
           >
             <Image
-              src="/optimized/hero/hero1.jpg"
+              src="/optimized/portraits/golden-1.jpg"
               alt="Featured work"
               fill
               priority

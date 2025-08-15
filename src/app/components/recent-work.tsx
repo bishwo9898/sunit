@@ -22,29 +22,23 @@ export default function RecentWork() {
   // Load images from manifest
   useEffect(() => {
     let mounted = true;
-    const fallback = (): Img[] => [
-      { src: "/optimized/hero/hero1.jpg", alt: "Elopement" },
-      { src: "/optimized/hero/hero2.jpg", alt: "Portrait" },
-      { src: "/optimized/hero/hero3.jpg", alt: "Wedding" },
-      { src: "/optimized/hero/hero4.jpg", alt: "Details" },
-    ];
     (async () => {
       try {
-        const res = await fetch("/images.manifest.json", { cache: "no-store" });
+        const res = await fetch("/api/images", { cache: "no-store" });
         if (res.ok) {
           const data: Img[] = await res.json();
-          const filtered = data.filter(
-            (i) => i.category && i.category !== "hero"
-          );
+          const filtered = data
+            .filter((i) => i.category && i.category !== "hero")
+            .filter((i) => !(i.src || "").includes("/optimized/hero/"));
           if (mounted) {
-            setItems((filtered.length ? filtered : fallback()).slice(0, 60));
+            setItems(filtered.slice(0, 60));
             setLoaded(true);
           }
           return;
         }
       } catch {}
       if (mounted) {
-        setItems(fallback());
+        setItems([]);
         setLoaded(true);
       }
     })();
