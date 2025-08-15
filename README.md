@@ -47,9 +47,9 @@ When deployed on Vercel, the filesystem is immutable. To enable uploads and mani
 
 - Install the Vercel Blob integration for the project.
 - Set these environment variables in Vercel:
-	- `BLOB_MANIFEST_KEY` e.g. `images.manifest.json` (stable key used to store the manifest)
-	- `BLOB_MANIFEST_URL` public URL to the manifest Blob (e.g. `https://<bucket>.public.blob.vercel-storage.com/images.manifest.json`)
-	- `BLOB_READ_WRITE_TOKEN` only needed for local development; in Vercel it is injected automatically by the integration
+  - `BLOB_MANIFEST_KEY` e.g. `images.manifest.json` (stable key used to store the manifest)
+  - `BLOB_MANIFEST_URL` public URL to the manifest Blob (e.g. `https://<bucket>.public.blob.vercel-storage.com/images.manifest.json`)
+  - `BLOB_READ_WRITE_TOKEN` only needed for local development; in Vercel it is injected automatically by the integration
 
 With these configured, the app will:
 
