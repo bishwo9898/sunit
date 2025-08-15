@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function AdminHome() {
+export default async function AdminHome() {
+  // Hard auth gate on server for SSR (Next 15 cookies() is async)
+  const ck = await cookies();
+  const session = ck.get("admin_session")?.value;
+  if (!session) redirect("/admin/login");
   const tiles = [
     {
       href: "/admin/media",

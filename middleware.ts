@@ -19,6 +19,7 @@ export function middleware(req: NextRequest) {
 		// flag admin UI requests so the root layout can hide Navbar/Footer
 		const requestHeaders = new Headers(req.headers);
 		requestHeaders.set('x-admin-route', '1');
+		requestHeaders.set('x-admin-login', '1');
 		return NextResponse.next({ request: { headers: requestHeaders } });
 	}
 	// Allow unauthenticated access to the API login endpoint
@@ -45,4 +46,4 @@ export function middleware(req: NextRequest) {
 	return NextResponse.next();
 }
 
-export const config = { matcher: ['/admin/:path*', '/api/admin/:path*'] };
+export const config = { matcher: ['/admin', '/admin/:path*', '/api/admin/:path*'] };
