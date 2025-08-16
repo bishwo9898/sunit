@@ -24,6 +24,45 @@ export function blobEnabled() {
   );
 }
 
+export function getBlobBaseUrl(): string | undefined {
+  if (!blobEnabled()) return undefined;
+  try {
+    const raw = process.env.BLOB_MANIFEST_URL as string; // e.g., https://<bucket>.public.blob.vercel-storage.com/images.manifest.json
+    const u = new URL(raw);
+    // Remove filename from pathname
+    u.pathname = u.pathname.replace(/[^/]+$/, '');
+    // Ensure trailing slash
+    if (!u.pathname.endsWith('/')) u.pathname += '/';
+    return u.toString();
+  } catch {
+    return undefined;
+  }
+}
+
+export async function readBlobJson<T = unknown>(key: string): Promise<T | null> {
+  const base = getBlobBaseUrl();
+  if (!base) return null;
+  try {
+    const url = base + key.replace(/^\//, '');
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+}
+
+export async function writeBlobJson(key: string, data: unknown): Promise<void> {
+  if (!blobEnabled()) return;
+  const json = JSON.stringify(data, null, 2);
+  const k = key.replace(/^\//, '');
+  await put(k, json, {
+    access: 'public',
+    contentType: 'application/json',
+    addRandomSuffix: false,
+  } as any);
+}
+
 export async function loadManifest(): Promise<ImgItem[]> {
   try {
     // Prefer Blob in production when configured
