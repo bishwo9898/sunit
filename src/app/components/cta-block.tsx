@@ -22,7 +22,7 @@ export default function CTABlock() {
               href="#book"
               className="inline-flex items-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-neutral-200"
             >
-              or Sceedule a meeting below
+              or Schedule a meeting below
             </Link>
           </div>
 
