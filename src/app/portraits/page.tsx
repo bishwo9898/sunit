@@ -1,6 +1,7 @@
 import Image from "next/image";
 import MasonryGallery from "../components/masonry-gallery";
 import StickyBook from "../components/sticky-book";
+import CTABlock from "../components/cta-block";
 import { loadManifest } from "@/utils/manifest.server";
 import { selectHeroImages } from "@/utils/hero-selection";
 
@@ -148,6 +149,10 @@ export default async function PortraitsPage() {
           lightboxVariant="clean"
           max={180}
         />
+      </div>
+      
+      <div id="book" data-aos="fade-up" data-aos-delay="300">
+        <CTABlock />
       </div>
 
       <StickyBook />
