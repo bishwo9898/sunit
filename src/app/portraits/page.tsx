@@ -150,7 +150,7 @@ export default async function PortraitsPage() {
           max={180}
         />
       </div>
-      
+
       <div id="book" data-aos="fade-up" data-aos-delay="300">
         <CTABlock />
       </div>
