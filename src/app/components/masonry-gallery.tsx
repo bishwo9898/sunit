@@ -43,7 +43,9 @@ export default function MasonryGallery({
     let mounted = true;
     (async () => {
       try {
-        const res = await fetch("/images.manifest.json", { cache: "no-store" });
+        const res = await fetch(`/api/images?ts=${Date.now()}`, {
+          cache: "no-store",
+        });
         if (res.ok) {
           const data: MasonryImage[] = await res.json();
           let filtered = data.filter(
