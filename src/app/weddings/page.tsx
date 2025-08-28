@@ -3,6 +3,7 @@ import StickyBook from "../components/sticky-book";
 import MasonryGallery from "../components/masonry-gallery"; // already client component
 import { loadManifest } from "@/utils/manifest.server";
 import { selectHeroImages } from "@/utils/hero-selection";
+import CTABlock from "../components/cta-block";
 
 export default async function WeddingsPage() {
   // Load manifest server-side similar to home hero to select wedding hero images
@@ -155,6 +156,8 @@ export default async function WeddingsPage() {
 
       {/* Sticky utility (client) */}
       <StickyBook />
+
+      <CTABlock />
     </>
   );
 }
