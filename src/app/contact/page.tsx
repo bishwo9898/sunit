@@ -132,6 +132,19 @@ export default function ContactPage() {
                   />
                 </div>
               </div>
+              {/* New phone number field */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold tracking-wide uppercase text-neutral-500">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  name="user_phone"
+                  required
+                  placeholder="(123) 456-7890"
+                  className="rounded-md bg-neutral-50 border border-neutral-200 focus:border-neutral-400 focus:ring-0 px-4 py-3 text-sm"
+                />
+              </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-semibold tracking-wide uppercase text-neutral-500">
