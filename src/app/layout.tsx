@@ -4,6 +4,12 @@ import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import Script from "next/script";
+import {
+  SEO_CONFIG,
+  getBreadcrumbSchema,
+  getLocalBusinessSchema,
+  getServiceSchema,
+} from "@/config/seo";
 
 // Font pairing: Playfair Display for high-impact headings, Plus Jakarta Sans for UI & body
 const bodyFont = Plus_Jakarta_Sans({
@@ -18,10 +24,9 @@ const displayFont = Playfair_Display({
   weight: ["500", "600", "700"],
 });
 
-const siteName = "Shutter Unit";
-const baseUrl = "https://www.shutterunit.com"; // adjust if deploying under different domain
-const defaultDesc =
-  "Shutter Unit – Midland, Texas wedding & portrait photographer. Timeless, cinematic imagery for modern celebrations, portraits, branding & editorial.";
+const siteName = SEO_CONFIG.businessName;
+const baseUrl = SEO_CONFIG.baseUrl;
+const defaultDesc = SEO_CONFIG.description;
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -41,6 +46,9 @@ export const metadata: Metadata = {
     "West Texas photographer",
     "personal branding photographer",
     "engagement photos Midland",
+    "portrait photographer texas",
+    "photographer texas",
+    "wedding photography texas",
   ],
   authors: [{ name: "Shutter Unit" }],
   creator: "Shutter Unit",
@@ -111,11 +119,8 @@ export default function RootLayout({
       addressRegion: "TX",
       addressCountry: "US",
     },
-    areaServed: ["United States", "Texas", "Midland"],
-    sameAs: [
-      "https://www.instagram.com/shutterunit",
-      "https://www.facebook.com/shutterunit",
-    ],
+    areaServed: ["United States", "Texas", "Midland", "Odessa", "Lubbock"],
+    sameAs: [SEO_CONFIG.socialLinks.instagram, SEO_CONFIG.socialLinks.facebook],
     openingHoursSpecification: [
       { "@type": "OpeningHoursSpecification", dayOfWeek: "Monday" },
     ],
@@ -136,6 +141,102 @@ export default function RootLayout({
     },
   };
 
+  // LocalBusiness schema for improved local SEO
+  const jsonLdLocalBusiness = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: siteName,
+    image: `${baseUrl}/optimized/hero/hero1.jpg`,
+    description: defaultDesc,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Midland",
+      addressRegion: "TX",
+      addressCountry: "US",
+    },
+    areaServed: [
+      { "@type": "City", name: "Midland" },
+      { "@type": "City", name: "Odessa" },
+      { "@type": "City", name: "Lubbock" },
+      { "@type": "State", name: "Texas" },
+    ],
+    url: baseUrl,
+    email: SEO_CONFIG.email,
+    sameAs: [SEO_CONFIG.socialLinks.instagram, SEO_CONFIG.socialLinks.facebook],
+  };
+
+  // Breadcrumb schema for better navigation in SERPs
+  const jsonLdBreadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: baseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Weddings",
+        item: `${baseUrl}/weddings`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Portraits",
+        item: `${baseUrl}/portraits`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: "Contact",
+        item: `${baseUrl}/contact`,
+      },
+    ],
+  };
+
+  // Service schema describing photography services
+  const jsonLdServices = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "Wedding Photography",
+      provider: {
+        "@type": "ProfessionalService",
+        name: siteName,
+        url: baseUrl,
+      },
+      areaServed: [
+        { "@type": "City", name: "Midland" },
+        { "@type": "City", name: "Odessa" },
+        { "@type": "State", name: "Texas" },
+      ],
+      description:
+        "Documentary and editorial wedding photography with timeless color and cinematic style.",
+      url: `${baseUrl}/weddings`,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "Portrait Photography",
+      provider: {
+        "@type": "ProfessionalService",
+        name: siteName,
+        url: baseUrl,
+      },
+      areaServed: [
+        { "@type": "City", name: "Midland" },
+        { "@type": "City", name: "Odessa" },
+        { "@type": "State", name: "Texas" },
+      ],
+      description:
+        "Professional portrait photography including headshots, editorial, and personal branding.",
+      url: `${baseUrl}/portraits`,
+    },
+  ];
+
   return (
     <html lang="en" className={`${bodyFont.variable} ${displayFont.variable}`}>
       <head>
@@ -155,6 +256,26 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
         />
+        <Script
+          id="ld-local-business"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLdLocalBusiness),
+          }}
+        />
+        <Script
+          id="ld-breadcrumb"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
+        />
+        {jsonLdServices.map((service, index) => (
+          <Script
+            key={`ld-service-${index}`}
+            id={`ld-service-${index}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(service) }}
+          />
+        ))}
       </head>
       <body className="flex flex-col min-h-screen bg-white text-neutral-900 antialiased font-sans">
         <Navbar />

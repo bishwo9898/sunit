@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Hero from "@/app/components/hero";
 import CategoryTiles from "@/app/components/category-tiles";
 import Services from "@/app/components/services";
@@ -7,6 +8,48 @@ import Testimonials from "@/app/components/testimonials";
 import CTABlock from "@/app/components/cta-block";
 import StickyBook from "@/app/components/sticky-book";
 import MasonryGallery from "@/app/components/masonry-gallery";
+import { SEO_CONFIG } from "@/config/seo";
+
+export const metadata: Metadata = {
+  title: "Shutter Unit | Photographer & Wedding Photography Across Texas",
+  description:
+    "Timeless, cinematic photography for weddings, portraits, branding & editorial. Based in Midland, TX, serving Texas.",
+  keywords: [
+    "photographer",
+    "marriage photography",
+    "wedding photographer",
+    "portrait photographer",
+    "texas photographer",
+    "photography texas",
+    "photographer texas",
+    "shutterunit",
+    "shutter unit",
+    "editorial photography",
+    "destination wedding photographer",
+  ],
+  openGraph: {
+    title: "Shutter Unit | Professional Photographer Across Texas",
+    description:
+      "Timeless, cinematic photography for weddings, portraits & branding",
+    url: SEO_CONFIG.baseUrl,
+    type: "website",
+    images: [
+      {
+        url: `${SEO_CONFIG.baseUrl}/optimized/hero/hero1.jpg`,
+        width: 1200,
+        height: 800,
+        alt: "Shutter Unit portfolio",
+      },
+    ],
+  },
+  twitter: {
+    title: "Shutter Unit | Professional Photographer Across Texas",
+    description:
+      "Timeless, cinematic photography for weddings, portraits & branding",
+    card: "summary_large_image",
+    images: [`${SEO_CONFIG.baseUrl}/optimized/hero/hero1.jpg`],
+  },
+};
 
 export default function HomePage() {
   return (

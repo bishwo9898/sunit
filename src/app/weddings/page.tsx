@@ -1,9 +1,54 @@
+import { Metadata } from "next";
 import Image from "next/image";
 import StickyBook from "../components/sticky-book";
 import MasonryGallery from "../components/masonry-gallery"; // already client component
 import { loadManifest } from "@/utils/manifest.server";
 import { selectHeroImages } from "@/utils/hero-selection";
 import CTABlock from "../components/cta-block";
+import { SEO_CONFIG } from "@/config/seo";
+
+export const metadata: Metadata = {
+  title: "Wedding Photography in Texas | Documentary & Editorial Style",
+  description:
+    "Timeless wedding photography with documentary honesty and editorial finesse. Serving Midland, Odessa, Lubbock & across Texas. Cinematic style, natural color.",
+  keywords: [
+    "wedding photographer",
+    "wedding photography texas",
+    "wedding photographer texas",
+    "texas wedding photographer",
+    "documentary wedding photography",
+    "editorial wedding photographer",
+    "midland wedding photographer",
+    "odessa wedding photographer",
+    "destination wedding photographer",
+    "elopement photography",
+    "engagement photographer",
+    "wedding videography",
+    "timeless wedding photos",
+  ],
+  openGraph: {
+    title: "Wedding Photography in Texas | Shutter Unit",
+    description:
+      "Documentary and editorial wedding photography with timeless color and cinematic style",
+    url: `${SEO_CONFIG.baseUrl}/weddings`,
+    type: "website",
+    images: [
+      {
+        url: `${SEO_CONFIG.baseUrl}/optimized/hero/hero1.jpg`,
+        width: 1200,
+        height: 800,
+        alt: "Shutter Unit wedding photography",
+      },
+    ],
+  },
+  twitter: {
+    title: "Wedding Photography in Texas | Shutter Unit",
+    description:
+      "Documentary and editorial wedding photography with timeless color and cinematic style",
+    card: "summary_large_image",
+    images: [`${SEO_CONFIG.baseUrl}/optimized/hero/hero1.jpg`],
+  },
+};
 
 export default async function WeddingsPage() {
   // Load manifest server-side similar to home hero to select wedding hero images
@@ -42,7 +87,7 @@ export default async function WeddingsPage() {
                 blurDataURL={s.blurDataURL}
               />
             </div>
-          )
+          ),
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
         <div className="pointer-events-none absolute inset-0 grain" />

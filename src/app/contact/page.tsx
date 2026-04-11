@@ -12,7 +12,7 @@ const PUBLIC_KEY =
 export default function ContactPage() {
   const formRef = useRef<HTMLFormElement | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
+    "idle",
   );
   const [errorMsg, setErrorMsg] = useState<string>("");
 
@@ -26,7 +26,7 @@ export default function ContactPage() {
         SERVICE_ID,
         TEMPLATE_ID,
         formRef.current,
-        PUBLIC_KEY
+        PUBLIC_KEY,
       );
       setStatus("sent");
       formRef.current.reset();
@@ -207,8 +207,8 @@ export default function ContactPage() {
                     {status === "sending"
                       ? "Sending..."
                       : status === "sent"
-                      ? "Sent ✓"
-                      : "Send Inquiry"}
+                        ? "Sent ✓"
+                        : "Send Inquiry"}
                   </span>
                   <span className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.15),transparent_70%)]" />
                 </button>

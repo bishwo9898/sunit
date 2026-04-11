@@ -1,9 +1,54 @@
+import { Metadata } from "next";
 import Image from "next/image";
 import MasonryGallery from "../components/masonry-gallery";
 import StickyBook from "../components/sticky-book";
 import CTABlock from "../components/cta-block";
 import { loadManifest } from "@/utils/manifest.server";
 import { selectHeroImages } from "@/utils/hero-selection";
+import { SEO_CONFIG } from "@/config/seo";
+
+export const metadata: Metadata = {
+  title: "Professional Portrait Photography in Texas | Shutter Unit",
+  description:
+    "Editorial and honest portrait photography for individuals, creatives, couples & families. Headshots, personal branding & lifestyle. Serving Midland, Odessa, Lubbock & Texas.",
+  keywords: [
+    "portrait photographer",
+    "portrait photography texas",
+    "headshot photographer",
+    "professional headshots",
+    "brand photography",
+    "editorial photography",
+    "personal branding photographer",
+    "lifestyle photography",
+    "corporate headshots",
+    "family portraits",
+    "character portraits",
+    "midland photographer",
+    "texas photographer",
+  ],
+  openGraph: {
+    title: "Professional Portrait Photography in Texas | Shutter Unit",
+    description:
+      "Editorial and honest portrait photography including headshots, branding & lifestyle sessions",
+    url: `${SEO_CONFIG.baseUrl}/portraits`,
+    type: "website",
+    images: [
+      {
+        url: `${SEO_CONFIG.baseUrl}/optimized/hero/hero1.jpg`,
+        width: 1200,
+        height: 800,
+        alt: "Shutter Unit portrait photography",
+      },
+    ],
+  },
+  twitter: {
+    title: "Professional Portrait Photography in Texas | Shutter Unit",
+    description:
+      "Editorial and honest portrait photography including headshots, branding & lifestyle sessions",
+    card: "summary_large_image",
+    images: [`${SEO_CONFIG.baseUrl}/optimized/hero/hero1.jpg`],
+  },
+};
 
 export default async function PortraitsPage() {
   const manifest = await loadManifest();
@@ -40,7 +85,7 @@ export default async function PortraitsPage() {
                 blurDataURL={s.blurDataURL}
               />
             </div>
-          )
+          ),
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
         <div className="pointer-events-none absolute inset-0 grain" />

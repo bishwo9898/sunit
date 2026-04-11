@@ -1,0 +1,14 @@
+# Robots.txt for Shutter Unit
+# Allows search engines to crawl all content
+
+User-agent: *
+Allow: /
+
+# Disallow admin area
+Disallow: /admin
+
+# Sitemap location (prefer this over robots tag for multiple sitemaps)
+Sitemap: https://www.shutterunit.com/sitemap.xml
+
+# Crawl delay (conservative, adjust if needed)
+Crawl-delay: 1
