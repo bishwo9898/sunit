@@ -7,9 +7,9 @@
     "build": "next build --no-lint",
     "start": "next start",
     "lint": "next lint",
-  "prep:images": "node scripts/prepare-images.mjs",
-  "migrate:n_p": "node scripts/move-np-to-portraits.mjs",
-  "optimize:portraits": "node scripts/reoptimize-portraits.mjs"
+    "prep:images": "node scripts/prepare-images.mjs",
+    "migrate:n_p": "node scripts/move-np-to-portraits.mjs",
+    "optimize:portraits": "node scripts/reoptimize-portraits.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
