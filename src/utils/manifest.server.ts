@@ -24,7 +24,7 @@ export async function loadManifest(): Promise<ImgItem[]> {
   try {
     const normalize = (arr: ImgItem[]): ImgItem[] =>
       (arr || []).map((it) => {
-        if (!it) return it as any;
+        if (!it) return it as unknown as ImgItem;
         const copy = { ...it } as ImgItem;
         if (copy.category === 'n_p') copy.category = 'portraits';
         if (typeof copy.src === 'string')

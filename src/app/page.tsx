@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import Hero from "@/app/components/hero";
 import CategoryTiles from "@/app/components/category-tiles";
 import Services from "@/app/components/services";
-import BeforeAfter from "@/app/components/before-after";
 import Process from "@/app/components/process";
 import Testimonials from "@/app/components/testimonials";
 import CTABlock from "@/app/components/cta-block";

@@ -1,6 +1,5 @@
-import Link from "next/link";
 import Image from "next/image";
-import { loadManifest } from "@/utils/manifest.server";
+import { loadManifest, ImgItem } from "@/utils/manifest.server";
 
 // Server Component: CSS-only Ken Burns hero with overlay and CTAs
 export default async function Hero() {
@@ -17,7 +16,7 @@ export default async function Hero() {
   return (
     <section className="relative h-[88vh] md:h-screen w-full overflow-hidden">
       {/* Slides */}
-      {slides.map((s: any, i: number) => (
+      {slides.map((s: ImgItem, i: number) => (
         <div
           key={s.src}
           aria-hidden="true"

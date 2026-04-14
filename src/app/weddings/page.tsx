@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import StickyBook from "../components/sticky-book";
 import MasonryGallery from "../components/masonry-gallery"; // already client component
-import { loadManifest } from "@/utils/manifest.server";
+import { loadManifest, ImgItem } from "@/utils/manifest.server";
 import { selectHeroImages } from "@/utils/hero-selection";
 import CTABlock from "../components/cta-block";
 import { SEO_CONFIG } from "@/config/seo";
@@ -58,7 +58,7 @@ export default async function WeddingsPage() {
     categories: ["weddings", "wedding"],
     count: 5,
   });
-  const fallbackSlides = [
+  const fallbackSlides: ImgItem[] = [
     { src: "/hero/hero3.webp", alt: "Elegant bridal portrait" },
     { src: "/hero/hero1.webp", alt: "Cinematic ceremony moment" },
     { src: "/hero/hero2.webp", alt: "Editorial couple frame" },
@@ -68,8 +68,8 @@ export default async function WeddingsPage() {
     <>
       {/* HERO (Ken Burns style reused) */}
       <section className="relative h-[78vh] md:h-[92vh] w-full overflow-hidden">
-        {(slides.length ? slides : (fallbackSlides as any)).map(
-          (s: any, i: number) => (
+        {(slides.length ? slides : fallbackSlides).map(
+          (s: ImgItem, i: number) => (
             <div
               key={s.src}
               aria-hidden="true"

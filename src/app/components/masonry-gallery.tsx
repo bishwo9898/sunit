@@ -129,9 +129,9 @@ export default function MasonryGallery({
 
   // AOS handles fade-up animations; ensure refresh after images mount (optional)
   useEffect(() => {
-    // @ts-ignore
+    // @ts-expect-error AOS is attached to window but not typed
     if (typeof window !== "undefined" && window.AOS && window.AOS.refresh) {
-      // @ts-ignore
+      // @ts-expect-error AOS is attached to window but not typed
       window.AOS.refresh();
     }
   }, [columnized]);

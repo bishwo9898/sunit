@@ -29,10 +29,11 @@ export default function ContactPage() {
         PUBLIC_KEY,
       );
       setStatus("sent");
-      formRef.current.reset();
-    } catch (err: any) {
+    } catch (err: unknown) {
       setStatus("error");
-      setErrorMsg(err?.text || "Something went wrong. Please try again.");
+      setErrorMsg(
+        (err as { text?: string })?.text || "Something went wrong. Please try again."
+      );
     }
   };
 

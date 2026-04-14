@@ -3,7 +3,7 @@ import Image from "next/image";
 import MasonryGallery from "../components/masonry-gallery";
 import StickyBook from "../components/sticky-book";
 import CTABlock from "../components/cta-block";
-import { loadManifest } from "@/utils/manifest.server";
+import { loadManifest, ImgItem } from "@/utils/manifest.server";
 import { selectHeroImages } from "@/utils/hero-selection";
 import { SEO_CONFIG } from "@/config/seo";
 
@@ -56,7 +56,7 @@ export default async function PortraitsPage() {
     categories: ["portraits"],
     count: 6,
   });
-  const fallbackSlides = [
+  const fallbackSlides: ImgItem[] = [
     { src: "/hero/hero2.webp", alt: "Editorial portrait" },
     { src: "/hero/hero3.webp", alt: "Natural light profile" },
     { src: "/hero/hero1.webp", alt: "Golden hour" },
@@ -66,8 +66,8 @@ export default async function PortraitsPage() {
     <>
       {/* HERO (Ken Burns style, mirroring weddings/home) */}
       <section className="relative h-[78vh] md:h-[92vh] w-full overflow-hidden">
-        {(slides.length ? slides : (fallbackSlides as any)).map(
-          (s: any, i: number) => (
+        {(slides.length ? slides : fallbackSlides).map(
+          (s: ImgItem, i: number) => (
             <div
               key={s.src}
               aria-hidden="true"

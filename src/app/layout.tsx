@@ -4,12 +4,7 @@ import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import Script from "next/script";
-import {
-  SEO_CONFIG,
-  getBreadcrumbSchema,
-  getLocalBusinessSchema,
-  getServiceSchema,
-} from "@/config/seo";
+import { SEO_CONFIG } from "@/config/seo";
 
 // Font pairing: Playfair Display for high-impact headings, Plus Jakarta Sans for UI & body
 const bodyFont = Plus_Jakarta_Sans({
