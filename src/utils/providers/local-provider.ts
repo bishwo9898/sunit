@@ -1,26 +1,14 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
 import type { ImgItem } from '../manifest.server';
+import manifestData from '../../../public/images.manifest.json';
 
 /**
- * Local image provider for local development or static hosting.
- * Reads image metadata from a pre-generated manifest file.
- * This is the most reliable way to serve local images on Vercel.
+ * Local image provider.
+ * Uses a direct import of the manifest JSON to ensure it is bundled 
+ * correctly by Next.js/Vercel in serverless environments.
  */
 export async function loadLocalManifest(): Promise<ImgItem[]> {
   try {
-    const manifestPath = path.join(process.cwd(), 'public', 'images.manifest.json');
-    console.log(`[local-provider] Attempting to read manifest from: ${manifestPath}`);
-    
-    try {
-      await fs.access(manifestPath);
-    } catch {
-      console.error(`[local-provider] Manifest file NOT found at: ${manifestPath}`);
-      return [];
-    }
-
-    const content = await fs.readFile(manifestPath, 'utf8');
-    const data = JSON.parse(content) as ImgItem[];
+    const data = manifestData as ImgItem[];
     
     if (!Array.isArray(data)) {
       console.error('[local-provider] Manifest content is not an array');
@@ -29,7 +17,7 @@ export async function loadLocalManifest(): Promise<ImgItem[]> {
     
     return data;
   } catch (err: any) {
-    console.error('[local-provider] Error in loadLocalManifest:', err.message);
+    console.error('[local-provider] Error loading bundled manifest:', err.message);
     return [];
   }
 }

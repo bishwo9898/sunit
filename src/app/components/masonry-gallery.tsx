@@ -48,14 +48,18 @@ export default function MasonryGallery({
         });
         if (res.ok) {
           const data: MasonryImage[] = await res.json();
+          console.log(`[MasonryGallery] Total images fetched: ${data.length}`);
+          
           let filtered = data.filter(
             (d) => d.category && d.category !== "hero"
           );
+          
           if (category) {
             const cats = Array.isArray(category) ? category : [category];
             filtered = filtered.filter(
               (d) => d.category && cats.includes(d.category)
             );
+            console.log(`[MasonryGallery] Filtered to ${filtered.length} images for category:`, cats);
           }
           // Deterministic shuffle that changes every 2 days.
           // Keeps featured images at the front but randomizes order within groups.
