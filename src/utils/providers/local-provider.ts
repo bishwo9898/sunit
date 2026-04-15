@@ -2,81 +2,27 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import type { ImgItem } from '../manifest.server';
 
-const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.webp', '.png']);
-
-// Maps public/optimized/<folder> → gallery category name
-// Edit this if you rename or add folders.
-const FOLDER_TO_CATEGORY: Record<string, string> = {
-  home:      'home',
-  hero:      'home',     // legacy: treat hero folder as home category
-  recents:   'home',     // legacy: treat recents as home too
-  portraits: 'portraits',
-  weddings:  'weddings',
-};
-
 /**
- * Scan public/optimized/<folder> and return ImgItem entries.
- * Uses sharp for width/height metadata if available, otherwise falls back
- * to 0 (Next.js Image will still work with fill or layout="responsive").
+ * Local image provider for local development or static hosting.
+ * Reads image metadata from a pre-generated manifest file.
+ * This is the most reliable way to serve local images on Vercel.
  */
-async function scanFolder(
-  folderPath: string,
-  category: string,
-  publicUrl: string,
-): Promise<ImgItem[]> {
-  let files: string[];
+export async function loadLocalManifest(): Promise<ImgItem[]> {
   try {
-    files = await fs.readdir(folderPath);
-  } catch {
+    // In Vercel serverless functions, we use path.join(process.cwd(), ...) 
+    // to ensure the file is resolved correctly from the deployment root.
+    const manifestPath = path.join(process.cwd(), 'public', 'images.manifest.json');
+    const content = await fs.readFile(manifestPath, 'utf8');
+    const data = JSON.parse(content) as ImgItem[];
+    
+    if (!Array.isArray(data)) {
+      console.error('[local-provider] Manifest is not an array');
+      return [];
+    }
+    
+    return data;
+  } catch (err) {
+    console.error('[local-provider] Failed to read images.manifest.json:', err);
     return [];
   }
-
-  const items: ImgItem[] = [];
-
-  for (const file of files) {
-    const ext = path.extname(file).toLowerCase();
-    if (!IMAGE_EXTENSIONS.has(ext)) continue;
-
-    const filePath = path.join(folderPath, file);
-    const src = `${publicUrl}/${file}`;
-
-    let width = 0;
-    let height = 0;
-
-    try {
-      // Dynamically import sharp (optional — skip if not available)
-      const sharp = (await import('sharp')).default;
-      const meta = await sharp(filePath).metadata();
-      width = meta.width ?? 0;
-      height = meta.height ?? 0;
-    } catch {
-      // sharp unavailable or failed — dimensions will be unknown
-    }
-
-    items.push({
-      src,
-      width:    width || undefined,
-      height:   height || undefined,
-      alt:      '',
-      tags:     [],
-      category,
-      original: src,
-    });
-  }
-
-  return items;
-}
-
-export async function loadLocalManifest(): Promise<ImgItem[]> {
-  const optimizedRoot = path.join(process.cwd(), 'public', 'optimized');
-  const allItems: ImgItem[] = [];
-
-  for (const [folder, category] of Object.entries(FOLDER_TO_CATEGORY)) {
-    const folderPath = path.join(optimizedRoot, folder);
-    const publicUrl = `/optimized/${folder}`;
-    const items = await scanFolder(folderPath, category, publicUrl);
-    allItems.push(...items);
-  }
-
-  return allItems;
 }
