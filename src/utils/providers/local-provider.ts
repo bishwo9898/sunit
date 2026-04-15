@@ -9,20 +9,27 @@ import type { ImgItem } from '../manifest.server';
  */
 export async function loadLocalManifest(): Promise<ImgItem[]> {
   try {
-    // In Vercel serverless functions, we use path.join(process.cwd(), ...) 
-    // to ensure the file is resolved correctly from the deployment root.
     const manifestPath = path.join(process.cwd(), 'public', 'images.manifest.json');
+    console.log(`[local-provider] Attempting to read manifest from: ${manifestPath}`);
+    
+    try {
+      await fs.access(manifestPath);
+    } catch {
+      console.error(`[local-provider] Manifest file NOT found at: ${manifestPath}`);
+      return [];
+    }
+
     const content = await fs.readFile(manifestPath, 'utf8');
     const data = JSON.parse(content) as ImgItem[];
     
     if (!Array.isArray(data)) {
-      console.error('[local-provider] Manifest is not an array');
+      console.error('[local-provider] Manifest content is not an array');
       return [];
     }
     
     return data;
-  } catch (err) {
-    console.error('[local-provider] Failed to read images.manifest.json:', err);
+  } catch (err: any) {
+    console.error('[local-provider] Error in loadLocalManifest:', err.message);
     return [];
   }
 }

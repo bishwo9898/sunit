@@ -8,8 +8,9 @@ export async function GET() {
     const data = await loadManifest();
     return NextResponse.json(data, {
       headers: {
-        // Cache in the browser/CDN for 5 minutes; Cloudinary is the source of truth
-        'Cache-Control': 's-maxage=300, stale-while-revalidate=60',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
       },
     });
   } catch {
