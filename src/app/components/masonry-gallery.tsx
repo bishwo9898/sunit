@@ -223,11 +223,7 @@ export default function MasonryGallery({
                     className="w-full h-auto object-contain" // ensure no cropping
                     loading="lazy"
                   />
-                  {img.alt && (
-                    <span className="pointer-events-none absolute left-3 bottom-3 text-[11px] tracking-wide uppercase font-medium text-white bg-black/40 px-2 py-1 rounded">
-                      {img.alt}
-                    </span>
-                  )}
+
                 </button>
               ))}
             </div>
@@ -297,17 +293,7 @@ export default function MasonryGallery({
                 </div>
               )}
             </div>
-            {items[open].alt && (
-              <figcaption
-                className={`mt-5 text-xs md:text-sm tracking-wide max-w-2xl text-center ${
-                  lightboxVariant === "clean"
-                    ? "text-neutral-600"
-                    : "text-neutral-300"
-                }`}
-              >
-                {items[open].alt}
-              </figcaption>
-            )}
+
             {/* Close */}
             <button
               onClick={(e) => {
