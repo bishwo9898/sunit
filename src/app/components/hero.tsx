@@ -4,7 +4,7 @@ import { loadManifest, ImgItem } from "@/utils/manifest.server";
 // Server Component: CSS-only Ken Burns hero with overlay and CTAs
 export default async function Hero() {
   const manifest = await loadManifest();
-  const heroFromManifest = manifest.filter((m) => m.category === "hero");
+  const heroFromManifest = manifest.filter((m) => m.category === "home");
   const slides = heroFromManifest.length
     ? heroFromManifest
     : [
