@@ -60,7 +60,7 @@ export default function HomePage() {
       {/* Unified gallery styling across site using MasonryGallery */}
       <div id="recent-work">
         <MasonryGallery
-          heading="See my work"
+          heading="See my work:"
           description="A living collage—weddings, portraits & recent commissions. Tap to enlarge."
           lightboxVariant="clean"
           max={140}

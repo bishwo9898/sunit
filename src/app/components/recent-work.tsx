@@ -232,7 +232,7 @@ export default function RecentWork() {
       <div className="w-full max-w-none mx-auto px-2 sm:px-3 md:px-4 lg:px-6 xl:px-8 2xl:px-10">
         <div className="flex flex-col items-center text-center gap-8 mb-16">
           <h2 className="font-display text-4xl md:text-6xl font-semibold tracking-tight leading-[1.05]">
-            See my work::::
+            See my work:
           </h2>
           {/* Scroll / swipe hint */}
           <div className="flex flex-col items-center gap-6" aria-hidden="true">
