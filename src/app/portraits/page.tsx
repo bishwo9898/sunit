@@ -56,17 +56,13 @@ export default async function PortraitsPage() {
     categories: ["portraits"],
     count: 6,
   });
-  const fallbackSlides: ImgItem[] = [
-    { src: "/hero/hero2.webp", alt: "Editorial portrait" },
-    { src: "/hero/hero3.webp", alt: "Natural light profile" },
-    { src: "/hero/hero1.webp", alt: "Golden hour" },
-  ];
+
 
   return (
     <>
       {/* HERO (Ken Burns style, mirroring weddings/home) */}
       <section className="relative h-[78vh] md:h-[92vh] w-full overflow-hidden">
-        {(slides.length ? slides : fallbackSlides).map(
+        {slides.map(
           (s: ImgItem, i: number) => (
             <div
               key={s.src}

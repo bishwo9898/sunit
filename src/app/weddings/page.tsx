@@ -53,22 +53,17 @@ export const metadata: Metadata = {
 export default async function WeddingsPage() {
   // Load manifest server-side similar to home hero to select wedding hero images
   const manifest = await loadManifest();
-  // Accept both possible spellings of the category (singular/plural)
+  // Cloudinary /weddings folder is the source for wedding hero images
   const slides = selectHeroImages(manifest, {
-    categories: ["weddings", "wedding"],
+    categories: ["weddings"],
     count: 5,
   });
-  const fallbackSlides: ImgItem[] = [
-    { src: "/hero/hero3.webp", alt: "Elegant bridal portrait" },
-    { src: "/hero/hero1.webp", alt: "Cinematic ceremony moment" },
-    { src: "/hero/hero2.webp", alt: "Editorial couple frame" },
-  ];
 
   return (
     <>
       {/* HERO (Ken Burns style reused) */}
       <section className="relative h-[78vh] md:h-[92vh] w-full overflow-hidden">
-        {(slides.length ? slides : fallbackSlides).map(
+        {slides.map(
           (s: ImgItem, i: number) => (
             <div
               key={s.src}

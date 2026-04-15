@@ -4,14 +4,8 @@ import { loadManifest, ImgItem } from "@/utils/manifest.server";
 // Server Component: CSS-only Ken Burns hero with overlay and CTAs
 export default async function Hero() {
   const manifest = await loadManifest();
-  const heroFromManifest = manifest.filter((m) => m.category === "hero");
-  const slides = heroFromManifest.length
-    ? heroFromManifest
-    : [
-        { src: "/hero/hero1.webp", alt: "West Texas sunset elopement" },
-        { src: "/hero/hero2.webp", alt: "Downtown portrait" },
-        { src: "/hero/hero3.webp", alt: "Austin rooftop wedding" },
-      ];
+  // Cloudinary /home folder is the source for home hero images
+  const slides = manifest.filter((m) => m.category === "home");
 
   return (
     <section className="relative h-[88vh] md:h-screen w-full overflow-hidden">

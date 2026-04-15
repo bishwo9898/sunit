@@ -1,13 +1,15 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
-
-function blobEnabled() {
-  return (
-    !!process.env.BLOB_MANIFEST_URL &&
-    !!process.env.BLOB_MANIFEST_KEY &&
-    (process.env.BLOB_READ_WRITE_TOKEN || process.env.VERCEL)
-  );
-}
+/**
+ * Image source router
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Controls which backend serves all gallery & hero images across the site.
+ *
+ * To switch sources, set IMAGE_SOURCE in .env.local:
+ *
+ *   IMAGE_SOURCE=local        → scans public/optimized/* (default)
+ *   IMAGE_SOURCE=cloudinary   → fetches from Cloudinary asset folders
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
 
 export type ImgItem = {
   src: string;
@@ -20,37 +22,21 @@ export type ImgItem = {
   original?: string;
 };
 
+/** Active image source. Change IMAGE_SOURCE in .env.local to switch. */
+const SOURCE = (process.env.IMAGE_SOURCE ?? 'local') as 'local' | 'cloudinary';
+
 export async function loadManifest(): Promise<ImgItem[]> {
   try {
-    const normalize = (arr: ImgItem[]): ImgItem[] =>
-      (arr || []).map((it) => {
-        if (!it) return it as unknown as ImgItem;
-        const copy = { ...it } as ImgItem;
-        if (copy.category === 'n_p') copy.category = 'portraits';
-        if (typeof copy.src === 'string')
-          copy.src = copy.src.replace('/optimized/n_p/', '/optimized/portraits/');
-        if (typeof copy.original === 'string')
-          copy.original = copy.original.replace('/n_p/', '/portraits/');
-        return copy;
-      });
-    // Prefer Blob manifest when configured (production)
-    if (blobEnabled()) {
-      try {
-        const url = process.env.BLOB_MANIFEST_URL as string;
-        const res = await fetch(url, { cache: 'no-store' });
-        if (res.ok) {
-          const data = (await res.json()) as ImgItem[];
-          if (Array.isArray(data)) return normalize(data);
-        }
-      } catch {}
+    if (SOURCE === 'cloudinary') {
+      const { loadCloudinaryManifest } = await import('./providers/cloudinary-provider');
+      return await loadCloudinaryManifest();
     }
-    const p = path.join(process.cwd(), 'public', 'images.manifest.json');
-    const buf = await fs.readFile(p, 'utf8');
-    const data = JSON.parse(buf) as ImgItem[];
-    if (!Array.isArray(data)) return [];
-    // Remap any legacy n_p entries to portraits to ensure they show in the portraits gallery
-    return normalize(data);
-  } catch {
+
+    // Default: local public/optimized/* folders
+    const { loadLocalManifest } = await import('./providers/local-provider');
+    return await loadLocalManifest();
+  } catch (err) {
+    console.error(`[manifest.server] Failed to load images from "${SOURCE}":`, err);
     return [];
   }
 }
