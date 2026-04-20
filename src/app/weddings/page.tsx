@@ -5,6 +5,7 @@ import MasonryGallery from "../components/masonry-gallery"; // already client co
 import { loadManifest, ImgItem } from "@/utils/manifest.server";
 import { selectHeroImages } from "@/utils/hero-selection";
 import CTABlock from "../components/cta-block";
+import WeddingFilm from "../components/wedding-film";
 import { SEO_CONFIG } from "@/config/seo";
 
 export const metadata: Metadata = {
@@ -180,6 +181,13 @@ export default async function WeddingsPage() {
           </div>
         </div>
       </section>
+
+      <WeddingFilm
+        eyebrow="Featured wedding film"
+        title="Adriaana & Isaiah in motion"
+        description="Before the full gallery opens, sit inside one finished story: the pace of the day, the held glances, and the little movements that make the still images feel even more alive."
+        align="center"
+      />
 
       {/* Wedding Gallery */}
       <div id="wedding-gallery">

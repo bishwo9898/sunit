@@ -7,6 +7,7 @@ import Testimonials from "@/app/components/testimonials";
 import CTABlock from "@/app/components/cta-block";
 import StickyBook from "@/app/components/sticky-book";
 import MasonryGallery from "@/app/components/masonry-gallery";
+import WeddingFilm from "@/app/components/wedding-film";
 import { SEO_CONFIG } from "@/config/seo";
 
 export const metadata: Metadata = {
@@ -57,6 +58,11 @@ export default function HomePage() {
       <div data-aos="fade-up" data-aos-delay="50">
         <CategoryTiles />
       </div>
+      <WeddingFilm
+        eyebrow="Now in motion"
+        title="The feeling between the frames"
+        description="A single wedding film, placed like a breath before the gallery. It gives the photographs another pulse: the walk, the touch, the sound, the room remembering."
+      />
       {/* Unified gallery styling across site using MasonryGallery */}
       <div id="recent-work">
         <MasonryGallery

@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+public/video/*.mov
 
 # debug
 npm-debug.log*
