@@ -11,7 +11,7 @@ import WeddingFilm from "@/app/components/wedding-film";
 import { SEO_CONFIG } from "@/config/seo";
 
 export const metadata: Metadata = {
-  title: "Shutter Unit | Photographer & Wedding Photography Across Texas",
+  title: "Shutter Unit Photography | Wedding & Portrait Photographer in Texas",
   description:
     "Timeless, cinematic photography for weddings, portraits, branding & editorial. Based in Midland, TX, serving Texas.",
   keywords: [
