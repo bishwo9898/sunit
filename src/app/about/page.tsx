@@ -31,13 +31,13 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
             {/* Image Column */}
-            <div 
+            <div
               className="lg:col-span-5 relative"
               data-aos="fade-right"
             >
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/optimized/portraits/ff1.jpg"
+                  src="/optimized/portraits/everaftershutterunit.jpg"
                   alt="Fortunnes Efe"
                   fill
                   className="object-cover"
@@ -50,7 +50,7 @@ export default function AboutPage() {
             </div>
 
             {/* Text Column */}
-            <div 
+            <div
               className="lg:col-span-7"
               data-aos="fade-left"
             >
@@ -76,13 +76,13 @@ export default function AboutPage() {
       {/* Philosophy Section */}
       <section className="py-20 bg-white border-y border-neutral-100">
         <div className="mx-auto max-w-4xl px-6 text-center">
-          <h2 
+          <h2
             className="text-3xl md:text-5xl font-display italic mb-10"
             data-aos="fade-up"
           >
             &quot;That&apos;s everything to me.&quot;
           </h2>
-          <div 
+          <div
             className="text-xl md:text-2xl text-neutral-500 font-light leading-relaxed"
             data-aos="fade-up"
             data-aos-delay="100"
@@ -110,7 +110,7 @@ export default function AboutPage() {
               </p>
               <div className="h-px w-24 bg-neutral-900" />
             </div>
-            <div 
+            <div
               className="relative aspect-video rounded-2xl overflow-hidden shadow-lg"
               data-aos="zoom-in"
             >
@@ -129,7 +129,7 @@ export default function AboutPage() {
       <section className="py-24 bg-neutral-900 text-white">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <div 
+            <div
               className="relative aspect-[3/4] lg:order-2 rounded-2xl overflow-hidden"
               data-aos="fade-left"
             >
@@ -166,31 +166,31 @@ export default function AboutPage() {
               Everafter by ShutterUnit.
             </h2>
             <div className="relative inline-block">
-               <div className="absolute -inset-1 bg-gradient-to-r from-neutral-200 to-neutral-100 blur-lg opacity-50" />
-               <p className="relative text-lg italic text-neutral-500 max-w-2xl mx-auto">
-                 &quot;I&apos;ve always loved a good rom com, that Disney happily ever after feeling.&quot;
-               </p>
+              <div className="absolute -inset-1 bg-gradient-to-r from-neutral-200 to-neutral-100 blur-lg opacity-50" />
+              <p className="relative text-lg italic text-neutral-500 max-w-2xl mx-auto">
+                &quot;I&apos;ve always loved a good rom com, that Disney happily ever after feeling.&quot;
+              </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-            <div 
+            <div
               className="aspect-[4/5] relative rounded-xl overflow-hidden shadow-md"
-              data-aos="fade-up" 
+              data-aos="fade-up"
               data-aos-delay="100"
             >
               <Image src="/optimized/weddings/eunice-two.jpg" alt="Wedding detail" fill className="object-cover" />
             </div>
-            <div 
+            <div
               className="aspect-[4/5] relative rounded-xl overflow-hidden shadow-xl md:-translate-y-8"
-              data-aos="fade-up" 
+              data-aos="fade-up"
               data-aos-delay="200"
             >
               <Image src="/optimized/weddings/eunice-three.jpg" alt="Wedding detail" fill className="object-cover" />
             </div>
-            <div 
+            <div
               className="aspect-[4/5] relative rounded-xl overflow-hidden shadow-md"
-              data-aos="fade-up" 
+              data-aos="fade-up"
               data-aos-delay="300"
             >
               <Image src="/optimized/weddings/eunice-onr.jpg" alt="Wedding detail" fill className="object-cover" />
@@ -199,7 +199,7 @@ export default function AboutPage() {
 
           <div className="max-w-3xl mx-auto text-xl text-neutral-600 leading-relaxed text-center" data-aos="fade-up">
             <p className="mb-8">
-              But here&apos;s the reality: your wedding day is temporary. The hair fades, the makeup comes off, the flowers wilt. 
+              But here&apos;s the reality: your wedding day is temporary. The hair fades, the makeup comes off, the flowers wilt.
             </p>
             <p className="mb-0 text-2xl text-neutral-900 font-display italic">
               Your photos and video are what remain. They&apos;re the only thing that echoes forever.
@@ -218,8 +218,8 @@ export default function AboutPage() {
             <p className="text-xl text-neutral-900 font-medium tracking-wide mb-16">
               Wherever your love takes you across Texas or beyond, I&apos;ll be there to make sure it lives forever.
             </p>
-            
-            <Link 
+
+            <Link
               href="/contact"
               className="inline-block bg-neutral-900 text-white px-12 py-5 rounded-full text-lg font-medium tracking-wide hover:bg-neutral-800 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
             >
