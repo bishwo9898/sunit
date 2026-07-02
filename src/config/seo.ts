@@ -6,7 +6,7 @@ export const SEO_CONFIG = {
   businessName: "Shutter Unit",
   baseUrl: "https://www.shutterunit.com",
   description:
-    "Shutter Unit – Midland, Texas wedding & portrait photographer. Timeless, cinematic imagery for modern celebrations, portraits, branding & editorial. ShutterUnit, Shutter Unit Photography, Shutter Unit Midland, Shutter Unit Texas, Shutter Unit Odessa, Shutter Unit Lubbock, Shutter Unit Big Spring, Shutter Unit West Texas",
+    "Shutter Unit – Midland, Texas weddiCapturing timeless moments through cinematic wedding, portrait, branding, and editorial photography. Based in Midland, Texas, Shutter Unit serves couples, families, and businesses across West Texas with authentic, elegant imageryng & portrait photographer. Timeless, cinematic imagery for modern celebrations, portraits, branding & editorial. ShutterUnit, Shutter Unit Photography, Shutter Unit Midland, Shutter Unit Texas, Shutter Unit Odessa, Shutter Unit Lubbock, Shutter Unit Big Spring, Shutter Unit West Texas",
 
   // Location Information
   location: {
