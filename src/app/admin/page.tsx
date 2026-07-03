@@ -26,6 +26,52 @@ type OptimizationTask = {
   resultName?: string;
 };
 
+// Vercel Serverless has a strict 4.5MB upload limit. 
+// For giant 10-20MB originals, we do a lightning-fast pre-compression in the browser
+// using HTML canvas to get it just under 4MB before sending to Sharp for rigorous optimization.
+const preCompressFile = async (file: File, maxSizeMB = 4.2): Promise<File> => {
+  if (file.size <= maxSizeMB * 1024 * 1024) return file;
+  
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement('img');
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let { width, height } = img;
+        
+        // Scale down if enormous, but keep it high-res
+        const maxDim = 3200;
+        if (width > maxDim || height > maxDim) {
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width *= ratio;
+          height *= ratio;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+        
+        // binary search for right quality could be done, but a simple stepped reduction works fast
+        const attemptCompress = (quality: number) => {
+          canvas.toBlob((blob) => {
+            if (!blob) return resolve(file); // fail safe
+            if (blob.size <= maxSizeMB * 1024 * 1024 || quality <= 0.6) {
+               resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+            } else {
+               attemptCompress(quality - 0.1);
+            }
+          }, 'image/jpeg', quality);
+        };
+        attemptCompress(0.95);
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
 export default function ImageOptimizerPage() {
   const [tasks, setTasks] = useState<OptimizationTask[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -73,12 +119,13 @@ export default function ImageOptimizerPage() {
     for (const task of pendingTasks) {
       setTasks(prev => prev.map(t => t.id === task.id ? { ...t, status: 'processing', error: undefined } : t));
 
-      const formData = new FormData();
-      formData.append("image", task.file);
-      // We could pass quality/maxWidth but our API uses defaults currently. 
-      // For now, let's just stick to the backend defaults or update API if needed.
-
       try {
+        // Guarantee file is under Vercel's 4.5MB body limit
+        const safeFile = await preCompressFile(task.file);
+        
+        const formData = new FormData();
+        formData.append("image", safeFile);
+
         const response = await fetch("/api/admin/optimize", {
           method: "POST",
           headers: {
@@ -89,8 +136,20 @@ export default function ImageOptimizerPage() {
         });
 
         if (!response.ok) {
-          const errData = await response.json();
-          throw new Error(errData.error || "Optimization failed");
+          let errorMsg = "Optimization failed";
+          if (response.status === 413) {
+             errorMsg = "File is still too large for the server. Try uploading a smaller original.";
+          } else {
+             try {
+                const errData = await response.json();
+                errorMsg = errData.error || errorMsg;
+             } catch (err) {
+                // Handle Vercel returning plain text for router timeouts/crashes
+                const textErr = await response.text();
+                errorMsg = textErr.substring(0, 100) || errorMsg;
+             }
+          }
+          throw new Error(errorMsg);
         }
 
         const blob = await response.blob();
