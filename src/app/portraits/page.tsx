@@ -7,6 +7,8 @@ import { loadManifest, ImgItem } from "@/utils/manifest.server";
 import { selectHeroImages } from "@/utils/hero-selection";
 import { SEO_CONFIG } from "@/config/seo";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Professional Portrait Photography in Texas | Shutter Unit",
   description:
