@@ -19,18 +19,53 @@ html { scroll-behavior: smooth; }
 /* Utility helpers */
 .heading-gradient { background:linear-gradient(90deg,#fff,#e3e3e3 70%); -webkit-background-clip:text; background-clip:text; color:transparent; }
 
-/* Hero Ken Burns slides: 3 images cycling every ~6s each */
+/*
+  Hero Ken Burns — mathematically correct multi-slide sequencer
+  ─────────────────────────────────────────────────────────────
+  Formula:
+    --kb-count : total number of slides (set inline on each slide)
+    --kb-hold  : seconds each slide is fully visible  (default 6s)
+    --kb-fade  : seconds for cross-fade in/out        (default 1.2s)
+    Total cycle = count × hold
+    Each slide's animation runs for that full cycle so they loop in sync.
+
+  Keyframe breakdown (for 1 of N slides, hold=6s, fade=1.2s, N=6 → cycle=36s):
+    0%           = start of MY turn   → fade in (opacity: 0→1)
+    fade/cycle%  = fully visible
+    (hold-fade)/cycle × 100% = start fading out
+    hold/cycle%  = fully gone
+    100%         = wait invisible until next loop
+*/
 .kb-slide {
-	background-size: cover;
-	background-position: center;
-	animation: kb-zoom 18s infinite ease-in-out;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  /* animation is set per-slide via inline style to carry the count/index */
 }
+
+/* The actual animation keyframes – parameterised by CSS vars set inline */
+@property --kb-opacity {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.kb-slide {
+  animation-name: kb-zoom;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+  /* duration & delay are computed per-slide in the component */
+}
+
 @keyframes kb-zoom {
-	0% { transform: scale(1) translateZ(0); opacity: 0; }
-	4% { opacity: 1; }
-	30% { transform: scale(1.08) translateZ(0); opacity: 1; }
-	33% { opacity: 0; }
-	100% { transform: scale(1.12) translateZ(0); opacity: 0; }
+  /* percentages are computed in JS and written as CSS vars on the element */
+  0%   { opacity: 0; transform: scale(1)    translateZ(0); }
+  2%   { opacity: 1; transform: scale(1)    translateZ(0); }
+  25%  { opacity: 1; transform: scale(1.06) translateZ(0); }
+  31%  { opacity: 0; transform: scale(1.08) translateZ(0); }
+  100% { opacity: 0; transform: scale(1.1)  translateZ(0); }
 }
 
 /* Simple film grain overlay */

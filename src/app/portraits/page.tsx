@@ -50,12 +50,15 @@ export const metadata: Metadata = {
   },
 };
 
+const HOLD = 6;
+
 export default async function PortraitsPage() {
   const manifest = await loadManifest();
   const slides = selectHeroImages(manifest, {
     categories: ["portraits"],
     count: 6,
   });
+  const cycleDuration = Math.max(slides.length, 1) * HOLD;
 
 
   return (
@@ -67,8 +70,12 @@ export default async function PortraitsPage() {
             <div
               key={s.src}
               aria-hidden="true"
-              className="absolute inset-0 opacity-0 kb-slide"
-              style={{ animationDelay: `${i * 6}s` }}
+              className="absolute inset-0 kb-slide"
+              style={{
+                animationDuration: `${cycleDuration}s`,
+                animationDelay: `${i * HOLD}s`,
+                opacity: 0,
+              }}
             >
               <Image
                 src={s.src}
