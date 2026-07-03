@@ -51,26 +51,30 @@ export const metadata: Metadata = {
   },
 };
 
+const HOLD = 6;
+
 export default async function WeddingsPage() {
-  // Load manifest server-side similar to home hero to select wedding hero images
   const manifest = await loadManifest();
-  // Cloudinary /weddings folder is the source for wedding hero images
   const slides = selectHeroImages(manifest, {
     categories: ["weddings"],
     count: 5,
   });
+  const cycleDuration = Math.max(slides.length, 1) * HOLD;
 
   return (
     <>
       {/* HERO (Ken Burns style reused) */}
       <section className="relative h-[78vh] md:h-[92vh] w-full overflow-hidden">
-        {slides.map(
-          (s: ImgItem, i: number) => (
+        {slides.map((s: ImgItem, i: number) => (
             <div
               key={s.src}
               aria-hidden="true"
-              className="absolute inset-0 opacity-0 kb-slide"
-              style={{ animationDelay: `${i * 6}s` }}
+              className="absolute inset-0 kb-slide"
+              style={{
+                animationDuration: `${cycleDuration}s`,
+                animationDelay: `${i * HOLD}s`,
+                opacity: 0,
+              }}
             >
               <Image
                 src={s.src}
@@ -83,8 +87,7 @@ export default async function WeddingsPage() {
                 blurDataURL={s.blurDataURL}
               />
             </div>
-          ),
-        )}
+        ))}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
         <div className="pointer-events-none absolute inset-0 grain" />
         <div className="relative z-10 flex h-full items-end pb-16 md:pb-24">

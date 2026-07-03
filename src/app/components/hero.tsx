@@ -1,34 +1,61 @@
 import Image from "next/image";
-import { loadManifest, ImgItem } from "@/utils/manifest.server";
+import { loadManifest } from "@/utils/manifest.server";
+import { selectHeroImages } from "@/utils/hero-selection";
 
-// Server Component: CSS-only Ken Burns hero with overlay and CTAs
+/**
+ * Hero timing constants
+ * holdTime  = how long each slide is fully visible (seconds)
+ * fadeTime  = cross-fade duration (seconds) — just used to choose image sizes
+ * 
+ * Total cycle = slideCount × holdTime
+ * Each slide's delay = index × holdTime
+ * Each slide's duration = total cycle (so all loops stay in sync)
+ */
+const HOLD = 6;   // seconds per slide
+const LIMIT = 5; // max slides for hero
+
 export default async function Hero() {
   const manifest = await loadManifest();
-  // Cloudinary /home folder is the source for home hero images
-  const slides = manifest.filter((m) => m.category === "home");
+  const allSlides = selectHeroImages(manifest, {
+    categories: ["hero", "home"],
+    count: LIMIT,
+  });
+
+  const count = allSlides.length;
+  const cycleDuration = count * HOLD; // e.g. 5 slides × 6s = 30s
 
   return (
     <section className="relative h-[88vh] md:h-screen w-full overflow-hidden">
-      {/* Slides */}
-      {slides.map((s: ImgItem, i: number) => (
-        <div
-          key={s.src}
-          aria-hidden="true"
-          className="absolute inset-0 opacity-0 kb-slide"
-          style={{ animationDelay: `${i * 6}s` }}
-        >
-          <Image
-            src={s.src}
-            alt={s.alt || "Hero image"}
-            fill
-            priority={i === 0}
-            sizes="100vw"
-            className="object-cover"
-            placeholder={s.blurDataURL ? "blur" : "empty"}
-            blurDataURL={s.blurDataURL}
-          />
-        </div>
-      ))}
+      {/* Slides — each independent, guaranteed no overlap */}
+      {allSlides.map((s, i) => {
+        const delay = i * HOLD;
+        return (
+          <div
+            key={s.src}
+            aria-hidden="true"
+            className="absolute inset-0 kb-slide"
+            style={{
+              animationDuration: `${cycleDuration}s`,
+              animationDelay: `${delay}s`,
+              // Start invisible; animation-fill-mode:both handles the rest
+              opacity: 0,
+            }}
+          >
+            <Image
+              src={s.src}
+              alt={s.alt || "Hero image"}
+              fill
+              // Only the first two slides get priority — rest lazy load while first is shown
+              priority={i < 2}
+              sizes="100vw"
+              className="object-cover"
+              // No blur placeholder for Cloudinary URLs (they have no blurDataURL)
+              placeholder={s.blurDataURL ? "blur" : "empty"}
+              blurDataURL={s.blurDataURL}
+            />
+          </div>
+        );
+      })}
 
       {/* Film grain + gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
@@ -42,14 +69,14 @@ export default async function Hero() {
               Midland, TX • Available Worldwide
             </p>
             <h1 className="mt-4 text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white">
-              Cinematic Wedding & Portrait Photography
+              Cinematic Wedding &amp; Portrait Photography
             </h1>
             <p className="mt-4 max-w-2xl text-neutral-300 text-base md:text-lg">
               Honest frames. Editorial polish. Made for people who value story
               over trends.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4 md:gap-5">
-              {/* Primary: solid + subtle glow */}
+              {/* Primary CTA */}
               <a
                 href="#book"
                 className="group relative inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-sm font-semibold text-neutral-900 shadow-sm shadow-black/10 ring-1 ring-black/5 transition focus:outline-none focus:ring-2 focus:ring-white/60 hover:shadow-lg hover:shadow-black/20"
@@ -72,7 +99,7 @@ export default async function Hero() {
                 <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-white/10 via-white/10 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span className="pointer-events-none absolute -inset-px rounded-full ring-1 ring-black/10" />
               </a>
-              {/* Secondary: glass / outline hybrid */}
+              {/* Secondary CTA */}
               <a
                 href="#recent-work"
                 className="group relative inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold text-white/90 ring-1 ring-white/30 hover:ring-white/50 backdrop-blur-md bg-white/10 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/60"
@@ -92,7 +119,7 @@ export default async function Hero() {
                 </svg>
                 <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-white/0 via-white/0 to-white/0 group-hover:from-white/5 group-hover:to-white/0 transition-colors" />
               </a>
-              {/* Tertiary: pill + animated underline */}
+              {/* Tertiary CTA */}
               <a
                 href="#services"
                 className="relative text-[11px] md:text-xs font-medium text-white/70 hover:text-white px-4 py-1.5 rounded-full overflow-hidden transition group ring-1 ring-white/15 hover:ring-white/30 backdrop-blur-sm"
