@@ -8,6 +8,8 @@ import CTABlock from "../components/cta-block";
 import WeddingFilm from "../components/wedding-film";
 import { SEO_CONFIG } from "@/config/seo";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Wedding Photography in Texas | Documentary & Editorial Style",
   description:

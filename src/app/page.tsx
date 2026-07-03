@@ -10,6 +10,8 @@ import MasonryGallery from "@/app/components/masonry-gallery";
 import WeddingFilm from "@/app/components/wedding-film";
 import { SEO_CONFIG } from "@/config/seo";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Shutter Unit Photography | Wedding & Portrait Photographer in Texas",
   description:
