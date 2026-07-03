@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     const optimizedMetadata = await sharp(optimizedBuffer).metadata();
 
     // Return the optimized image with appropriate headers
-    return new NextResponse(optimizedBuffer, {
+    return new NextResponse(new Uint8Array(optimizedBuffer), {
       headers: {
         'Content-Type': 'image/webp',
         'Content-Disposition': `attachment; filename="${file.name.replace(/\.[^/.]+$/, "")}.webp"`,
