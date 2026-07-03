@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       .webp({ 
         quality: quality, 
         effort: 6,
-        smartSubsampling: true 
+        smartSubsample: true 
       })
       .toBuffer();
 
