@@ -58,7 +58,7 @@ export default function AboutPage() {
                 The Artist Behind the Lens
               </span>
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-medium leading-[1.1] mb-8">
-                I&apos;m Fortunnes Efe...
+                I&apos;m Fortunes Efe
               </h1>
               <div className="space-y-6 text-lg md:text-xl text-neutral-600 leading-relaxed max-w-2xl">
                 <p>
