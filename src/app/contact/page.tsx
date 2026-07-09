@@ -73,7 +73,7 @@ export default function ContactPage() {
                   TX
                 </span>
                 <span className="group-hover:text-neutral-800 transition-colors">
-                  Based in Midland, TX • Available Worldwide
+                  West Texas • Lubbock • Midland • Available Worldwide
                 </span>
               </div>
               <div className="flex items-center gap-3 group">

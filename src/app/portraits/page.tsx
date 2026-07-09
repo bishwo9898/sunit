@@ -10,7 +10,7 @@ import { SEO_CONFIG } from "@/config/seo";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Professional Portrait Photography in Texas | Shutter Unit",
+  title: "West Texas Portrait Photographer | Editorial & Honest",
   description:
     "Editorial and honest portrait photography for individuals, creatives, couples & families. Headshots, personal branding & lifestyle. Serving Midland, Odessa, Lubbock & Texas.",
   keywords: [
@@ -49,6 +49,9 @@ export const metadata: Metadata = {
       "Editorial and honest portrait photography including headshots, branding & lifestyle sessions",
     card: "summary_large_image",
     images: [`${SEO_CONFIG.baseUrl}/optimized/hero/hero1.jpg`],
+  },
+  alternates: {
+    canonical: "/portraits",
   },
 };
 

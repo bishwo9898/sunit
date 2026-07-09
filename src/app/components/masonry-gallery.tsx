@@ -49,11 +49,11 @@ export default function MasonryGallery({
         if (res.ok) {
           const data: MasonryImage[] = await res.json();
           console.log(`[MasonryGallery] Total images fetched: ${data.length}`);
-          
+
           let filtered = data.filter(
             (d) => d.category && d.category !== "hero"
           );
-          
+
           if (category) {
             const cats = Array.isArray(category) ? category : [category];
             filtered = filtered.filter(
@@ -92,7 +92,7 @@ export default function MasonryGallery({
           }
           return;
         }
-      } catch {}
+      } catch { }
       if (mounted) setLoaded(true);
     })();
     return () => {
@@ -244,27 +244,24 @@ export default function MasonryGallery({
 
       {open !== null && items[open] && (
         <div
-          className={`fixed inset-0 z-[120] select-none ${
-            lightboxVariant === "clean"
+          className={`fixed inset-0 z-[120] select-none ${lightboxVariant === "clean"
               ? "bg-white"
               : "bg-black/90 backdrop-blur-sm"
-          }`}
+            }`}
           role="dialog"
           aria-modal
         >
           <figure
-            className={`relative h-full w-full flex flex-col items-center justify-center ${
-              lightboxVariant === "clean" ? "p-4 md:p-8" : "p-6"
-            }`}
+            className={`relative h-full w-full flex flex-col items-center justify-center ${lightboxVariant === "clean" ? "p-4 md:p-8" : "p-6"
+              }`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Progress indicator */}
             <div
-              className={`absolute top-4 left-4 text-[11px] font-medium tracking-wide ${
-                lightboxVariant === "clean"
+              className={`absolute top-4 left-4 text-[11px] font-medium tracking-wide ${lightboxVariant === "clean"
                   ? "text-neutral-500"
                   : "text-white/70"
-              }`}
+                }`}
             >
               {open + 1} / {items.length}
             </div>
@@ -273,11 +270,10 @@ export default function MasonryGallery({
                 <img
                   src={items[open].src}
                   alt={items[open].alt || "Gallery image"}
-                  className={`max-h-[82vh] w-auto max-w-[92vw] object-contain transition duration-500 ease-out ${
-                    lightboxVariant === "clean"
+                  className={`max-h-[82vh] w-auto max-w-[92vw] object-contain transition duration-500 ease-out ${lightboxVariant === "clean"
                       ? "shadow-xl shadow-black/10 rounded-lg animate-[fadeScale_.6s_ease]"
                       : "animate-[fadeIn_.5s_ease]"
-                  }`}
+                    }`}
                   draggable={false}
                   loading="eager"
                 />
@@ -305,11 +301,10 @@ export default function MasonryGallery({
                 close();
               }}
               aria-label="Close"
-              className={`absolute top-3 right-3 flex items-center justify-center px-3 py-2 text-4xl leading-none font-light select-none transition-colors focus:outline-none focus-visible:ring-2 rounded-md z-20 ${
-                lightboxVariant === "clean"
+              className={`absolute top-3 right-3 flex items-center justify-center px-3 py-2 text-4xl leading-none font-light select-none transition-colors focus:outline-none focus-visible:ring-2 rounded-md z-20 ${lightboxVariant === "clean"
                   ? "text-neutral-500 hover:text-neutral-800 focus-visible:ring-neutral-300"
                   : "text-white/80 hover:text-white focus-visible:ring-white/60"
-              }`}
+                }`}
             >
               ×
             </button>
@@ -320,11 +315,10 @@ export default function MasonryGallery({
                 showPrev();
               }}
               aria-label="Previous"
-              className={`absolute left-3 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center px-3 py-3 text-3xl font-normal transition-colors focus:outline-none focus-visible:ring-2 rounded-md z-20 ${
-                lightboxVariant === "clean"
+              className={`absolute left-3 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center px-3 py-3 text-3xl font-normal transition-colors focus:outline-none focus-visible:ring-2 rounded-md z-20 ${lightboxVariant === "clean"
                   ? "text-neutral-400 hover:text-neutral-800 focus-visible:ring-neutral-300"
                   : "text-white/70 hover:text-white focus-visible:ring-white/50"
-              }`}
+                }`}
             >
               ‹
             </button>
@@ -335,11 +329,10 @@ export default function MasonryGallery({
                 showNext();
               }}
               aria-label="Next"
-              className={`absolute right-3 top-1/2 translate-x-1/2 -translate-y-1/2 flex items-center justify-center px-3 py-3 text-3xl font-normal transition-colors focus:outline-none focus-visible:ring-2 rounded-md z-20 ${
-                lightboxVariant === "clean"
+              className={`absolute right-3 top-1/2 translate-x-1/2 -translate-y-1/2 flex items-center justify-center px-3 py-3 text-3xl font-normal transition-colors focus:outline-none focus-visible:ring-2 rounded-md z-20 ${lightboxVariant === "clean"
                   ? "text-neutral-400 hover:text-neutral-800 focus-visible:ring-neutral-300"
                   : "text-white/70 hover:text-white focus-visible:ring-white/50"
-              }`}
+                }`}
             >
               ›
             </button>

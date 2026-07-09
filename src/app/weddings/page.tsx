@@ -11,7 +11,7 @@ import { SEO_CONFIG } from "@/config/seo";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Wedding Photography in Texas | Documentary & Editorial Style",
+  title: "West Texas Wedding Photographer | Documentary & Editorial",
   description:
     "Timeless wedding photography with documentary honesty and editorial finesse. Serving Midland, Odessa, Lubbock & across Texas. Cinematic style, natural color.",
   keywords: [
@@ -50,6 +50,9 @@ export const metadata: Metadata = {
       "Documentary and editorial wedding photography with timeless color and cinematic style",
     card: "summary_large_image",
     images: [`${SEO_CONFIG.baseUrl}/optimized/hero/hero1.jpg`],
+  },
+  alternates: {
+    canonical: "/weddings",
   },
 };
 

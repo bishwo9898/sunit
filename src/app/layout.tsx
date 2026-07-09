@@ -3,7 +3,6 @@ import "./globals.css";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
-import Script from "next/script";
 import { SEO_CONFIG } from "@/config/seo";
 
 // Font pairing: Playfair Display for high-impact headings, Plus Jakarta Sans for UI & body
@@ -26,7 +25,7 @@ const defaultDesc = SEO_CONFIG.description;
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: `${siteName} | Midland Texas Wedding & Portrait Photographer`,
+    default: `${siteName} | West Texas Wedding & Portrait Photographer`,
     template: `%s | ${siteName}`,
   },
   description: defaultDesc,
@@ -52,7 +51,7 @@ export const metadata: Metadata = {
     type: "website",
     url: baseUrl,
     siteName,
-    title: `${siteName} | Midland Texas Wedding & Portrait Photographer`,
+    title: `${siteName} | West Texas Wedding & Portrait Photographer`,
     description: defaultDesc,
     locale: "en_US",
     images: [
@@ -67,7 +66,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     creator: "@shutterunit", // update if a real handle exists
-    title: `${siteName} | Midland Texas Wedding & Portrait Photographer`,
+    title: `${siteName} | West Texas Wedding & Portrait Photographer`,
     description: defaultDesc,
     images: [
       {
@@ -77,7 +76,7 @@ export const metadata: Metadata = {
     ],
   },
   alternates: {
-    canonical: baseUrl,
+    canonical: "/",
   },
   robots: {
     index: true,
@@ -93,6 +92,13 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? {
+        verification: {
+          google: process.env.GOOGLE_SITE_VERIFICATION,
+        },
+      }
+    : {}),
 };
 
 export default function RootLayout({
@@ -100,177 +106,88 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const jsonLdOrg = {
+  const structuredData = {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    name: siteName,
-    image: `${baseUrl}/optimized/hero/hero1.jpg`,
-    url: baseUrl,
-    logo: `${baseUrl}/favicon.ico`,
-    description: defaultDesc,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Midland",
-      addressRegion: "TX",
-      addressCountry: "US",
-    },
-    areaServed: ["United States", "Texas", "Midland", "Odessa", "Lubbock"],
-    sameAs: [SEO_CONFIG.socialLinks.instagram, SEO_CONFIG.socialLinks.facebook],
-    openingHoursSpecification: [
-      { "@type": "OpeningHoursSpecification", dayOfWeek: "Monday" },
-    ],
-  };
-
-  const jsonLdPerson = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: "Shutter Unit",
-    jobTitle: "Photographer",
-    worksFor: { "@type": "Organization", name: siteName },
-    url: baseUrl,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Midland",
-      addressRegion: "TX",
-      addressCountry: "US",
-    },
-  };
-
-  // LocalBusiness schema for improved local SEO
-  const jsonLdLocalBusiness = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: siteName,
-    image: `${baseUrl}/optimized/hero/hero1.jpg`,
-    description: defaultDesc,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Midland",
-      addressRegion: "TX",
-      addressCountry: "US",
-    },
-    areaServed: [
-      { "@type": "City", name: "Midland" },
-      { "@type": "City", name: "Odessa" },
-      { "@type": "City", name: "Lubbock" },
-      { "@type": "State", name: "Texas" },
-    ],
-    url: baseUrl,
-    email: SEO_CONFIG.email,
-    sameAs: [SEO_CONFIG.socialLinks.instagram, SEO_CONFIG.socialLinks.facebook],
-  };
-
-  // Breadcrumb schema for better navigation in SERPs
-  const jsonLdBreadcrumb = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
+    "@graph": [
       {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: baseUrl,
+        "@type": "WebSite",
+        "@id": `${baseUrl}/#website`,
+        url: baseUrl,
+        name: siteName,
+        description: defaultDesc,
+        inLanguage: "en-US",
+        publisher: { "@id": `${baseUrl}/#business` },
       },
       {
-        "@type": "ListItem",
-        position: 2,
-        name: "Weddings",
-        item: `${baseUrl}/weddings`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: "Portraits",
-        item: `${baseUrl}/portraits`,
-      },
-      {
-        "@type": "ListItem",
-        position: 4,
-        name: "Contact",
-        item: `${baseUrl}/contact`,
-      },
-    ],
-  };
-
-  // Service schema describing photography services
-  const jsonLdServices = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      name: "Wedding Photography",
-      provider: {
-        "@type": "ProfessionalService",
+        "@type": ["LocalBusiness", "ProfessionalService"],
+        "@id": `${baseUrl}/#business`,
         name: siteName,
         url: baseUrl,
+        image: `${baseUrl}/optimized/hero/hero1.jpg`,
+        logo: `${baseUrl}/favicon.ico`,
+        description: defaultDesc,
+        email: SEO_CONFIG.email,
+        areaServed: SEO_CONFIG.serviceAreas.map((name) => ({
+          "@type":
+            name === "Texas" || name === "West Texas" ? "AdministrativeArea" : "City",
+          name,
+        })),
+        founder: { "@id": `${baseUrl}/about#fortunes-efe` },
+        sameAs: [
+          SEO_CONFIG.socialLinks.instagram,
+          SEO_CONFIG.socialLinks.facebook,
+        ],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Photography services",
+          itemListElement: [
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Wedding Photography",
+                url: `${baseUrl}/weddings`,
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Portrait Photography",
+                url: `${baseUrl}/portraits`,
+              },
+            },
+          ],
+        },
       },
-      areaServed: [
-        { "@type": "City", name: "Midland" },
-        { "@type": "City", name: "Odessa" },
-        { "@type": "State", name: "Texas" },
-      ],
-      description:
-        "Documentary and editorial wedding photography with timeless color and cinematic style.",
-      url: `${baseUrl}/weddings`,
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      name: "Portrait Photography",
-      provider: {
-        "@type": "ProfessionalService",
-        name: siteName,
-        url: baseUrl,
+      {
+        "@type": "Person",
+        "@id": `${baseUrl}/about#fortunes-efe`,
+        name: "Fortunes Efe",
+        jobTitle: "Photographer",
+        url: `${baseUrl}/about`,
+        worksFor: { "@id": `${baseUrl}/#business` },
+        knowsAbout: [
+          "Wedding photography",
+          "Portrait photography",
+          "Editorial photography",
+          "Skin tone care in photography",
+        ],
       },
-      areaServed: [
-        { "@type": "City", name: "Midland" },
-        { "@type": "City", name: "Odessa" },
-        { "@type": "State", name: "Texas" },
-      ],
-      description:
-        "Professional portrait photography including headshots, editorial, and personal branding.",
-      url: `${baseUrl}/portraits`,
-    },
-  ];
+    ],
+  };
 
   return (
     <html lang="en" className={`${bodyFont.variable} ${displayFont.variable}`}>
       <head>
-        <link rel="canonical" href={baseUrl} />
         <meta name="theme-color" content="#ffffff" />
-        <meta
-          name="google-site-verification"
-          content="YOUR_GOOGLE_SITE_VERIFICATION_CODE"
-        />
-        <Script
-          id="ld-org"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdOrg) }}
-        />
-        <Script
-          id="ld-person"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdPerson) }}
-        />
-        <Script
-          id="ld-local-business"
+        <script
+          id="site-structured-data"
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLdLocalBusiness),
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
-        <Script
-          id="ld-breadcrumb"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }}
-        />
-        {jsonLdServices.map((service, index) => (
-          <Script
-            key={`ld-service-${index}`}
-            id={`ld-service-${index}`}
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(service) }}
-          />
-        ))}
       </head>
       <body className="flex flex-col min-h-screen bg-white text-neutral-900 antialiased font-sans">
         <Navbar />

@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import { loadManifest } from "@/utils/manifest.server";
 import MasonryGallery from "../components/masonry-gallery";
 import { FiCloud, FiInfo, FiCode } from "react-icons/fi";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    noarchive: true,
+  },
+};
 
 export default async function CloudinaryTestPage() {
   const manifest = await loadManifest();

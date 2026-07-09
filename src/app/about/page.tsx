@@ -18,9 +18,12 @@ const bodyFont = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "About | Fortunnes Efe - Wedding & Portrait Photographer",
+  title: "About Fortunes Efe | West Texas Photographer",
   description:
-    "Learn more about Fortunnes Efe, a Nigerian photographer based in Lubbock, Texas, specializing in editorial wedding and portrait photography with a focus on skin tone care.",
+    "Meet Fortunes Efe, a Nigerian photographer based in Lubbock, Texas, specializing in editorial wedding and portrait photography with intentional skin-tone care.",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutPage() {
@@ -38,7 +41,7 @@ export default function AboutPage() {
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
                 <Image
                   src="/optimized/portraits/everaftershutterunit.jpg"
-                  alt="Fortunnes Efe"
+                  alt="Fortunes Efe, photographer behind Shutter Unit"
                   fill
                   className="object-cover"
                   priority

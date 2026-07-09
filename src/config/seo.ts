@@ -6,7 +6,7 @@ export const SEO_CONFIG = {
   businessName: "Shutter Unit",
   baseUrl: "https://www.shutterunit.com",
   description:
-    "Shutter Unit – Midland, Texas weddiCapturing timeless moments through cinematic wedding, portrait, branding, and editorial photography. Based in Midland, Texas, Shutter Unit serves couples, families, and businesses across West Texas with authentic, elegant imageryng & portrait photographer. Timeless, cinematic imagery for modern celebrations, portraits, branding & editorial. ShutterUnit, Shutter Unit Photography, Shutter Unit Midland, Shutter Unit Texas, Shutter Unit Odessa, Shutter Unit Lubbock, Shutter Unit Big Spring, Shutter Unit West Texas",
+    "Cinematic wedding and portrait photography by Fortunes Efe. Based in West Texas and serving Midland, Lubbock, Odessa, and celebrations across Texas.",
 
   // Location Information
   location: {
@@ -21,7 +21,14 @@ export const SEO_CONFIG = {
   },
 
   // Service Areas (West Texas focus)
-  serviceAreas: ["Midland", "Odessa", "Lubbock", "Big Spring", "Texas"],
+  serviceAreas: [
+    "Midland",
+    "Lubbock",
+    "Odessa",
+    "Big Spring",
+    "West Texas",
+    "Texas",
+  ],
 
   // Social Media Links
   socialLinks: {

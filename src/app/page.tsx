@@ -13,9 +13,9 @@ import { SEO_CONFIG } from "@/config/seo";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Shutter Unit Photography | Wedding & Portrait Photographer in Texas",
+  title: "West Texas Wedding & Portrait Photographer",
   description:
-    "Timeless, cinematic photography for weddings, portraits, branding & editorial. Based in Midland, TX, serving Texas.",
+    "Cinematic wedding, portrait, branding, and editorial photography serving Lubbock, Midland, Odessa, and celebrations across Texas.",
   keywords: [
     "photographer",
     "marriage photography",
@@ -50,6 +50,9 @@ export const metadata: Metadata = {
       "Timeless, cinematic photography for weddings, portraits & branding",
     card: "summary_large_image",
     images: [`${SEO_CONFIG.baseUrl}/optimized/hero/hero1.jpg`],
+  },
+  alternates: {
+    canonical: "/",
   },
 };
 

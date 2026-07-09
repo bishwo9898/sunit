@@ -1,34 +1,39 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.shutterunit.com';
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.shutterunit.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-	const now = new Date();
-	return [
-		{
-			url: `${BASE_URL}/`,
-			lastModified: now,
-			changeFrequency: 'weekly',
-			priority: 1,
-		},
-		{
-			url: `${BASE_URL}/portraits`,
-			lastModified: now,
-			changeFrequency: 'weekly',
-			priority: 0.8,
-		},
-		{
-			url: `${BASE_URL}/weddings`,
-			lastModified: now,
-			changeFrequency: 'weekly',
-			priority: 0.8,
-		},
-		{
-			url: `${BASE_URL}/contact`,
-			lastModified: now,
-			changeFrequency: 'monthly',
-			priority: 0.6,
-		},
-	];
-}
+  const pages = [
+    { path: "", changeFrequency: "weekly" as const, priority: 1 },
+    { path: "/weddings", changeFrequency: "monthly" as const, priority: 0.9 },
+    { path: "/portraits", changeFrequency: "monthly" as const, priority: 0.9 },
+    { path: "/about", changeFrequency: "yearly" as const, priority: 0.7 },
+    { path: "/contact", changeFrequency: "yearly" as const, priority: 0.7 },
+    {
+      path: "/lubbock-wedding-photographer",
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    },
+    {
+      path: "/lubbock-engagement-photographer",
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    {
+      path: "/lubbock-graduation-photographer",
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    {
+      path: "/lubbock-portrait-photographer",
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+  ];
 
+  return pages.map(({ path, ...entry }) => ({
+    url: `${BASE_URL}${path || "/"}`,
+    ...entry,
+  }));
+}

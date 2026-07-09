@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact Photographer in Texas | Book Your Session | Shutter Unit",
+  title: "Contact & Book a West Texas Photographer",
   description:
     "Get in touch with photographer in Texas. Book your wedding, portrait, or editorial session. Fast response times, available across Midland, Odessa, Lubbock & Texas.",
   keywords: [
@@ -32,6 +32,9 @@ export const metadata: Metadata = {
     description: "Get in touch to book your photography session.",
     card: "summary_large_image",
     images: ["https://www.shutterunit.com/optimized/hero/hero1.jpg"],
+  },
+  alternates: {
+    canonical: "/contact",
   },
 };
 

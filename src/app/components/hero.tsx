@@ -66,7 +66,7 @@ export default async function Hero() {
         <div className="px-6 md:px-10 lg:px-16 w-full">
           <div className="mx-auto max-w-6xl">
             <p className="text-neutral-300 tracking-widest uppercase text-xs md:text-sm">
-              Midland, TX • Available Worldwide
+              West Texas • Lubbock • Midland • Available Worldwide
             </p>
             <h1 className="mt-4 text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white">
               Cinematic Wedding &amp; Portrait Photography
