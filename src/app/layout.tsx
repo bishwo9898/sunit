@@ -4,6 +4,7 @@ import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
 import { SEO_CONFIG } from "@/config/seo";
+import { Analytics } from "@vercel/analytics/next";
 
 // Font pairing: Playfair Display for high-impact headings, Plus Jakarta Sans for UI & body
 const bodyFont = Plus_Jakarta_Sans({
@@ -193,6 +194,7 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
